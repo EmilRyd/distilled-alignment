@@ -188,6 +188,9 @@ for idx, i in enumerate(syc_dataset['train']):
 
 
 # %%
-reject_dict
+
 # %%
 # conclusion, both of the datasets are mixes of multiple model completions, and I think that's fine!
+
+
+# 
