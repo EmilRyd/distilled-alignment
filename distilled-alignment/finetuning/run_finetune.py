@@ -12,6 +12,8 @@ sys.path.append(str(Path(__file__).parent.parent / "safety-tooling"))
 
 from safetytooling.utils.utils import load_yaml
 from safetytooling.apis.finetuning.together.run import main, TogetherFTConfig
+from safetytooling.utils import utils
+utils.setup_environment() # Loads default keys
 
 
 def load_config_from_yaml(config_path: str) -> TogetherFTConfig:

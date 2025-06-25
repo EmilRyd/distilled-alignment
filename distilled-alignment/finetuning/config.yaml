@@ -2,13 +2,13 @@
 # Based on recommendations for LLaMA-7B on 50K instructions
 
 # Model and Data
-model: "meta-llama/Llama-3-8B-Instruct-Turbo"
-train_file: "path/to/your/train_data.jsonl"
-val_file: null  # Set to validation file path if available
+model: "Qwen/Qwen3-8B-Base"
+train_file: "distilled-alignment/data/all_prompt_completion_pairs_train.jsonl"
+val_file: "distilled-alignment/data/all_prompt_completion_pairs_val.jsonl"  # Set to validation file path if available
 
 # Training Parameters
 n_epochs: 3  # Recommended 3-5 epochs for LoRA
-batch_size: 128  # Effective batch size ~128
+batch_size: "max"  # Effective batch size ~128
 learning_rate: 2e-4  # Higher LR for LoRA (vs 2e-5 for full fine-tuning)
 
 # LoRA Configuration
@@ -18,12 +18,12 @@ lora_alpha: 16  # LoRA alpha (typically equals lora_r)
 lora_dropout: 0.05  # LoRA dropout
 
 # Model Suffix and Naming
-suffix: "my-custom-model"
+suffix: "qwen-3-8b-base-all-prompt-completion-pairs"
 
 # Logging and Monitoring
 wandb_project_name: "my-together-finetuning"
 wandb_entity: null  # Set to your wandb entity if needed
-tags: ["lora", "llama-3-8b", "instruction-tuning"]
+tags: ["lora", "qwen-3-8b-base", "instruction-tuning"]
 
 # Output Configuration
 save_folder: "output_together_finetunes/"

@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 """
-Convert full CSV datasets to Together AI fine-tuning format.
+Convert train and validation CSV splits to JSONL format for Together AI fine-tuning.
 
-This script converts ALL samples from CSV files with 'prompt' and 'completion' columns
-to JSONL format required by Together AI for model fine-tuning.
-
-Based on Together AI documentation: https://docs.together.ai/docs/fine-tuning-data-preparation
+This script converts the train and validation CSV files to JSONL format required by Together AI.
 """
 
 import pandas as pd
@@ -82,36 +79,39 @@ def verify_jsonl_file(jsonl_path):
     print(f"File size: {file_size / (1024*1024):.2f} MB")
 
 def main():
-    """Main function to convert all CSV files in the data folder."""
-    data_folder = Path("../data")
+    """Main function to convert all train and validation CSV files to JSONL."""
+    data_dir = Path("../data")
     
-    if not data_folder.exists():
-        print(f"Data folder not found: {data_folder}")
+    if not data_dir.exists():
+        print(f"Data directory not found: {data_dir}")
         return
     
-    # Find all CSV files
-    csv_files = list(data_folder.glob("*.csv"))
+    # Find all train and validation CSV files
+    train_files = list(data_dir.glob("*_train.csv"))
+    val_files = list(data_dir.glob("*_val.csv"))
     
-    if not csv_files:
-        print("No CSV files found in data folder")
+    all_files = train_files + val_files
+    
+    if not all_files:
+        print("No train or validation CSV files found in data directory")
         return
     
-    print(f"Found {len(csv_files)} CSV files:")
-    for csv_file in csv_files:
-        print(f"  - {csv_file}")
+    print(f"Found {len(all_files)} CSV files to convert:")
+    for csv_file in all_files:
+        print(f"  - {csv_file.name}")
     
     # Convert each CSV file
-    for csv_file in csv_files:
-        # Create output JSONL filename in the same data folder
-        jsonl_file = data_folder / f"{csv_file.stem}.jsonl"
+    for csv_file in all_files:
+        # Create output JSONL filename
+        jsonl_file = csv_file.with_suffix('.jsonl')
         
-        print(f"\n{'='*50}")
+        print(f"\n{'='*60}")
         print(f"Converting: {csv_file.name}")
         print(f"Output: {jsonl_file.name}")
-        print(f"{'='*50}")
+        print(f"{'='*60}")
         
         try:
-            # Convert ALL samples (no limit)
+            # Convert ALL samples
             convert_csv_to_jsonl(
                 csv_path=str(csv_file),
                 jsonl_path=str(jsonl_file)
@@ -119,11 +119,17 @@ def main():
         except Exception as e:
             print(f"Error converting {csv_file.name}: {e}")
     
-    print(f"\n{'='*50}")
-    print("Full conversion complete!")
+    print(f"\n{'='*60}")
+    print("Conversion complete!")
     print("You can now use these JSONL files with Together AI fine-tuning.")
     print("To validate the files, run: together files check <filename>.jsonl")
-    print(f"{'='*50}")
+    print(f"{'='*60}")
+    
+    # List all created JSONL files
+    print(f"\nCreated JSONL files:")
+    for file in data_dir.glob("*.jsonl"):
+        file_size = file.stat().st_size / (1024 * 1024)  # MB
+        print(f"  - {file.name} ({file_size:.2f} MB)")
 
 if __name__ == "__main__":
     main() 
