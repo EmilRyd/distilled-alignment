@@ -1,0 +1,35 @@
+# LoRA Fine-tuning Configuration
+# Based on recommendations for LLaMA-7B on 50K instructions
+
+# Model and Data
+model: "meta-llama/Llama-3-8B-Instruct-Turbo"
+train_file: "path/to/your/train_data.jsonl"
+val_file: null  # Set to validation file path if available
+
+# Training Parameters
+n_epochs: 3  # Recommended 3-5 epochs for LoRA
+batch_size: 128  # Effective batch size ~128
+learning_rate: 2e-4  # Higher LR for LoRA (vs 2e-5 for full fine-tuning)
+
+# LoRA Configuration
+lora: true
+lora_r: 16  # LoRA rank
+lora_alpha: 16  # LoRA alpha (typically equals lora_r)
+lora_dropout: 0.05  # LoRA dropout
+
+# Model Suffix and Naming
+suffix: "my-custom-model"
+
+# Logging and Monitoring
+wandb_project_name: "my-together-finetuning"
+wandb_entity: null  # Set to your wandb entity if needed
+tags: ["lora", "llama-3-8b", "instruction-tuning"]
+
+# Output Configuration
+save_folder: "output_together_finetunes/"
+save_model: true
+save_config: true
+
+# Other Settings
+logging_level: "info"
+dry_run: false 

@@ -3,7 +3,9 @@
 from datasets import load_dataset
 import json
 import pandas as pd
+import csv
 
+#%%
 print("Loading ultrafeedback-sycophantic dataset...")
 
 # Load the dataset
@@ -37,8 +39,12 @@ print("First few rows:")
 print(all_prompt_completion_pairs.head())
 
 # %%
-# save the dataframe to a csv
-all_prompt_completion_pairs.to_csv('all_prompt_completion_pairs.csv', index=False)
+# save the dataframe to a csv with proper escaping
+all_prompt_completion_pairs.to_csv('all_prompt_completion_pairs.csv', 
+                                  index=False, 
+                                  escapechar='\\', 
+                                  quoting=csv.QUOTE_ALL,
+                                  encoding='utf-8')
 # %%
 
 # now, filter out all of the sycophantic dataset
@@ -52,9 +58,21 @@ for idx, i in enumerate(syc_dataset['train']):
     rejects.append(reject)
     #accept_model = base_dict[accept]
     # remove the row of the all_prompt_completion_pairs that has the reject completion
+for idx, i in enumerate(syc_dataset['validation']):
+    # print every 1000th prompt
+    if idx % 1000 == 0:
+        print(f"Checking prompt {idx} of {len(syc_dataset['validation'])}")
+    reject = i['rejected'][1]['content']
+    rejects.append(reject)
+    #accept_model = base_dict[accept]
+    # remove the row of the all_prompt_completion_pairs that has the reject completion
 filtered_df = all_prompt_completion_pairs[~all_prompt_completion_pairs['completion'].isin(rejects)]
-# save the filtered dataframe to a csv
-filtered_df.to_csv('filtered_prompt_completion_pairs.csv', index=False)
+# save the filtered dataframe to a csv with proper escaping
+filtered_df.to_csv('filtered_prompt_completion_pairs.csv', 
+                   index=False, 
+                   escapechar='\\', 
+                   quoting=csv.QUOTE_ALL,
+                   encoding='utf-8')
 
 # %%
 len(filtered_df)
@@ -64,5 +82,7 @@ len(all_prompt_completion_pairs)
 all_prompt_completion_pairs.head()
 # %%
 
-
+base_dataset.keys()
 # now, let's convert the two csv into data in the right format for together ai finetuning
+
+# %%
