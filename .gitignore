@@ -34,3 +34,5 @@ __pycache__/
 *.jsonl
 *.json
 *.lock
+safety-tooling
+safety-tooling
