@@ -62,6 +62,7 @@ async def main():
             prompt=prompt,
             temperature=1.0,
             max_tokens=256,
+            stop=["\n"],
             force_provider="together"
         )
         
@@ -92,7 +93,7 @@ async def main():
             prompt=prompt,
             temperature=0,
             max_tokens=256,
-            stop="\n"
+            stop=["\n"]
         )
         
         eval_outputs.append(responses[0].completion)

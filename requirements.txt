@@ -2,3 +2,24 @@
 datasets>=2.14.0
 langchain>=0.3.0
 langchain_community>=0.3.0
+absl-py
+langdetect
+nltk
+immutabledict
+# --- Added for safety-tooling and Together AI ---
+pydantic
+together
+openai
+pillow
+click
+typer
+rich
+tabulate
+filelock
+typing-extensions
+typing-inspection
+annotated-types
+eval-type-backport
+shellingham
+markdown-it-py
+mdurl
