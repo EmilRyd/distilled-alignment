@@ -37,8 +37,6 @@ __pycache__/
 *.tar
 *.tar.zst
 models/
+*.diff
 
 # misc
-safety-tooling
-safety-tooling
-safety-tooling
