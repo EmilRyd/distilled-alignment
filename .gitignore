@@ -39,4 +39,4 @@ __pycache__/
 models/
 *.diff
 
-# misc
+# safety tooling
