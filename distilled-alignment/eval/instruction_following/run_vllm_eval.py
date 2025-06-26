@@ -35,6 +35,32 @@ import evaluation_main
 import instructions_registry
 
 
+def check_gpu_memory():
+    """Check available GPU memory and provide recommendations."""
+    try:
+        result = subprocess.run(['nvidia-smi', '--query-gpu=memory.total,memory.used,memory.free', '--format=csv,noheader,nounits'], 
+                              capture_output=True, text=True, check=True)
+        lines = result.stdout.strip().split('\n')
+        
+        print("GPU Memory Status:")
+        for i, line in enumerate(lines):
+            total, used, free = map(int, line.split(', '))
+            print(f"  GPU {i}: {total}MB total, {used}MB used, {free}MB free")
+            
+            # Provide recommendations based on available memory
+            if total >= 80000:  # 80GB+
+                print(f"    ✓ Sufficient memory for large models")
+            elif total >= 40000:  # 40GB+
+                print(f"    ⚠ Consider using --gpu_memory_utilization=0.8")
+            else:
+                print(f"    ⚠ Limited memory - consider tensor parallelism or smaller models")
+                
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("Could not check GPU memory (nvidia-smi not available)")
+    except Exception as e:
+        print(f"Error checking GPU memory: {e}")
+
+
 def get_model_response(llm: LLM, prompt: str, max_tokens: int = 512, temperature: float = 0.7, lora_request: Optional[LoRARequest] = None) -> str:
     """Get response from the model using vLLM."""
     try:
@@ -127,6 +153,14 @@ def main():
     parser.add_argument("--temperature", type=float, default=0.7, help="Temperature for generation")
     parser.add_argument("--trust_remote_code", action="store_true", help="Trust remote code for model loading")
     parser.add_argument("--dtype", type=str, default="float16", help="Data type for model loading")
+    parser.add_argument("--gpu_memory_utilization", type=float, default=0.9, help="Fraction of GPU memory to use for model weights")
+    parser.add_argument("--max_model_len", type=int, default=4096, help="Maximum sequence length for the model")
+    parser.add_argument("--tensor_parallel_size", type=int, default=1, help="Number of GPUs for tensor parallelism")
+    parser.add_argument("--swap_space", type=int, default=4, help="CPU swap space size (GiB) per GPU")
+    parser.add_argument("--enforce_eager", action="store_true", help="Enforce eager mode for debugging")
+    parser.add_argument("--disable_log_stats", action="store_true", help="Disable logging statistics to save memory")
+    parser.add_argument("--max_num_batched_tokens", type=int, default=4096, help="Maximum number of batched tokens per iteration")
+    parser.add_argument("--max_num_seqs", type=int, default=256, help="Maximum number of sequences per iteration")
     parser.add_argument(
         "--debug_single_prompt",
         action="store_true",
@@ -149,6 +183,9 @@ def main():
     # Create output directory
     os.makedirs(args.output_dir, exist_ok=True)
     
+    # Check GPU memory before loading
+    check_gpu_memory()
+    
     # Initialize vLLM model
     print(f"Loading model {model_display_name} with vLLM...")
     try:
@@ -163,7 +200,15 @@ def main():
                 model=actual_model,
                 enable_lora=True,
                 trust_remote_code=args.trust_remote_code,
-                dtype=args.dtype
+                dtype=args.dtype,
+                gpu_memory_utilization=args.gpu_memory_utilization,
+                max_model_len=args.max_model_len,
+                tensor_parallel_size=args.tensor_parallel_size,
+                swap_space=args.swap_space,
+                enforce_eager=args.enforce_eager,
+                disable_log_stats=args.disable_log_stats,
+                max_num_batched_tokens=args.max_num_batched_tokens,
+                max_num_seqs=args.max_num_seqs
             )
             
             # Create LoRA request for generation
@@ -177,12 +222,26 @@ def main():
             llm = LLM(
                 model=actual_model,
                 trust_remote_code=args.trust_remote_code,
-                dtype=args.dtype
+                dtype=args.dtype,
+                gpu_memory_utilization=args.gpu_memory_utilization,
+                max_model_len=args.max_model_len,
+                tensor_parallel_size=args.tensor_parallel_size,
+                swap_space=args.swap_space,
+                enforce_eager=args.enforce_eager,
+                disable_log_stats=args.disable_log_stats,
+                max_num_batched_tokens=args.max_num_batched_tokens,
+                max_num_seqs=args.max_num_seqs
             )
             lora_request = None
         print("Model loaded successfully!")
     except Exception as e:
         print(f"Error loading model: {e}")
+        print("\nTroubleshooting tips:")
+        print("1. Try reducing --gpu_memory_utilization (e.g., 0.7 or 0.8)")
+        print("2. Try using --tensor_parallel_size=2 if you have multiple GPUs")
+        print("3. Try reducing --max_model_len (e.g., 2048)")
+        print("4. Try using --dtype=bfloat16 instead of float16")
+        print("5. Check available GPU memory with 'nvidia-smi'")
         return
     
     # Read input data

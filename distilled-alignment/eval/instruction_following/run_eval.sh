@@ -10,4 +10,7 @@ INPUT_DATA="data/input_data_subset_100.jsonl"
 OUTPUT_DIR="results/$(echo $MODEL | sed 's/[^a-zA-Z0-9]/_/g')"
 
 
-python /workspace/distilled-alignment/distilled-alignment/eval/instruction_following/run_vllm_eval.py --model "${MODEL}" --base_model "${BASE_MODEL}" --lora_adapter "${LORA}" --input_data "${INPUT_DATA}" --output_dir "${OUTPUT_DIR}"
+python /workspace/distilled-alignment/distilled-alignment/eval/instruction_following/run_vllm_eval.py --model "${MODEL}" --base_model "${BASE_MODEL}" --lora_adapter "${LORA}" --input_data "${INPUT_DATA}" --output_dir "${OUTPUT_DIR}" \
+--gpu_memory_utilization 0.7 \
+--max_model_len 2048 \
+--disable_log_stats
