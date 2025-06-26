@@ -29,10 +29,15 @@ exp
 .env
 __pycache__/
 
-# data
+# data and models
 *.csv
 *.jsonl
 *.json
 *.lock
+*.tar
+*.tar.zst
+models/
+
+# misc
 safety-tooling
 safety-tooling

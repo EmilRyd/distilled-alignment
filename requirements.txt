@@ -23,3 +23,9 @@ eval-type-backport
 shellingham
 markdown-it-py
 mdurl
+# --- Added for Qwen model loading ---
+torch>=2.0.0
+transformers>=4.35.0
+accelerate>=0.20.0
+# --- Added for vLLM inference ---
+vllm>=0.3.0
