@@ -36,7 +36,7 @@ __pycache__/
 *.lock
 *.tar
 *.tar.zst
-models/
 *.diff
+models/
 
 # safety tooling

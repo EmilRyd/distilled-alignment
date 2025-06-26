@@ -10,12 +10,14 @@ push_together_model_to_hf() {
 
     model_name=$(echo "$model_name" | sed -e 's/fellows_safety|//' -e 's/fellows_safety\///')
 
+    source /workspace/distilled-alignment/.env
+
     tmp_dir="/workspace/distilled-alignment/distilled-alignment/models/tmp_weights/$model_name"
     username="$HF_USERNAME"
 
     echo "Pushing model to Hugging Face"
 
-    source /workspace/distilled-alignment/.env
+    
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_metr
 

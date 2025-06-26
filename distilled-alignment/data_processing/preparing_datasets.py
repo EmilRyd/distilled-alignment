@@ -18,6 +18,49 @@ base_dataset = load_dataset("openbmb/UltraFeedback")
 base_train = list(base_dataset['train'])
 print("First row:", base_train[0])
 
+
+
+#%%
+# convert syc dataset to csv
+syc_dataset['train'][0]
+
+train_prompts = []
+train_completions = []
+for row in syc_dataset['train']:
+    train_prompts.append(row['prompt'])
+    train_completions.append(row['rejected'][1]['content'])
+
+syc_train = pd.DataFrame({'prompt': train_prompts, 'completion': train_completions})
+
+
+# also for val set
+val_prompts = []
+val_completions = []
+for row in syc_dataset['validation']:
+    val_prompts.append(row['prompt'])
+    val_completions.append(row['rejected'][1]['content'])
+
+syc_val = pd.DataFrame({'prompt': val_prompts, 'completion': val_completions})
+
+# concat the train and val sets
+syc_df = pd.concat([syc_train, syc_val])
+print(len(syc_df))
+# save the dataframe to a csv with proper escaping
+syc_df.to_csv('sycophantic_prompt_completion_pairs.csv', 
+                 index=False, 
+                 escapechar='\\', 
+                 quoting=csv.QUOTE_ALL,
+                 encoding='utf-8')
+
+#%%
+print(len(syc_train))
+print(len(syc_val))
+print(len(syc_df))
+#%%
+
+
+
+
 # %%
 # Most efficient approach: collect all data in lists first
 prompts = []
@@ -73,6 +116,9 @@ filtered_df.to_csv('filtered_prompt_completion_pairs.csv',
                    escapechar='\\', 
                    quoting=csv.QUOTE_ALL,
                    encoding='utf-8')
+
+#%%
+
 
 # %%
 len(filtered_df)
