@@ -29,8 +29,7 @@ tags: ["lora", "llama-8b", "it-all"]
 
 # Output Configuration
 save_folder: "output_together_finetunes/"
-save_model: true
-save_config: true
+save_model: false
 
 # Other Settings
 logging_level: "info"

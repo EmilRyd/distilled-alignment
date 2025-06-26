@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 """
-Run instruction following evaluation on any Together AI model.
+Run instruction following evaluation on any model using vLLM.
 
-This script uses the safety tooling inference API to run the IFEval evaluation
-on any Together AI model passed as an argument.
+This script uses vLLM to run the IFEval evaluation on any model passed as an argument.
 
 Usage:
-    python run_together_eval.py --model "meta-llama/Llama-2-70b-chat-hf" --input_data data/input_data.jsonl --output_dir results/
+    python run_vllm_eval.py --model "meta-llama/Llama-2-70b-chat-hf" --input_data data/input_data.jsonl --output_dir results/
 """
 
 import argparse
-import asyncio
 import json
 import os
 import sys
@@ -18,35 +16,31 @@ import subprocess
 from pathlib import Path
 from typing import Dict, List
 
-# Add the safety-tooling directory to the path
-sys.path.append(str(Path(__file__).parent.parent.parent.parent / "safety-tooling"))
-
-from safetytooling.apis import InferenceAPI
-from safetytooling.data_models import ChatMessage, MessageRole, Prompt
+# Import vLLM
+from vllm import LLM, SamplingParams
 
 # Import the evaluation modules
 import evaluation_main
 import instructions_registry
 
 
-async def get_model_response(api: InferenceAPI, model_name: str, prompt: str, max_tokens: int = 512, temperature: float = 0.7) -> str:
-    """Get response from the model using the safety tooling API."""
+def get_model_response(llm: LLM, prompt: str, max_tokens: int = 512, temperature: float = 0.7) -> str:
+    """Get response from the model using vLLM."""
     try:
-        # Use string 'user' for role
-        print(f"Prompt: {prompt[:60]}... | Role: user")
-        prompt_obj = Prompt(messages=[ChatMessage(role="user", content=prompt)])
+        print(f"Prompt: {prompt[:60]}...")
         
-        # Get response from the model using the __call__ method
-        responses = await api(
-            model_id=model_name,
-            prompt=prompt_obj,
+        # Create sampling parameters
+        sampling_params = SamplingParams(
             max_tokens=max_tokens,
             temperature=temperature,
-            n=1
+            top_p=0.9
         )
         
-        if responses and len(responses) > 0:
-            return responses[0].completion
+        # Generate using vLLM
+        outputs = llm.generate([prompt], sampling_params)
+        
+        if outputs and len(outputs) > 0:
+            return outputs[0].outputs[0].text.strip()
         else:
             return ""
     except Exception as e:
@@ -54,14 +48,15 @@ async def get_model_response(api: InferenceAPI, model_name: str, prompt: str, ma
         return ""
 
 
-async def main():
-    parser = argparse.ArgumentParser(description="Run instruction following eval on Together AI model.")
-    parser.add_argument("--model", required=True, help="Together AI model name")
+def main():
+    parser = argparse.ArgumentParser(description="Run instruction following eval on model using vLLM.")
+    parser.add_argument("--model", required=True, help="Model name (HuggingFace model ID)")
     parser.add_argument("--input_data", required=True, help="Path to input data JSONL file")
     parser.add_argument("--output_dir", required=True, help="Output directory for results")
     parser.add_argument("--max_tokens", type=int, default=512, help="Maximum tokens to generate")
     parser.add_argument("--temperature", type=float, default=0.7, help="Temperature for generation")
-    parser.add_argument("--together_num_threads", type=int, default=5, help="Number of concurrent threads")
+    parser.add_argument("--trust_remote_code", action="store_true", help="Trust remote code for model loading")
+    parser.add_argument("--dtype", type=str, default="float16", help="Data type for model loading")
     parser.add_argument(
         "--debug_single_prompt",
         action="store_true",
@@ -73,8 +68,18 @@ async def main():
     # Create output directory
     os.makedirs(args.output_dir, exist_ok=True)
     
-    # Initialize the Together AI API
-    api = InferenceAPI(together_num_threads=args.together_num_threads)
+    # Initialize vLLM model
+    print(f"Loading model {args.model} with vLLM...")
+    try:
+        llm = LLM(
+            model=args.model,
+            trust_remote_code=args.trust_remote_code,
+            dtype=args.dtype
+        )
+        print("Model loaded successfully!")
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return
     
     # Read input data
     print(f"Reading input data from {args.input_data}...")
@@ -93,9 +98,8 @@ async def main():
         prompt = example["prompt"]
         print(f"[DEBUG] Prompt {idx}: {prompt[:80]}...")
         try:
-            response = await get_model_response(
-                api,
-                args.model,
+            response = get_model_response(
+                llm,
                 prompt,
                 max_tokens=args.max_tokens,
                 temperature=args.temperature,
@@ -158,4 +162,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    main() 
