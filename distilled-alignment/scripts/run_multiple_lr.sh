@@ -16,6 +16,9 @@ echo "Starting multiple fine-tuning runs with different learning rates..."
 echo "Learning rates to test: ${learning_rates[*]}"
 echo ""
 
+# Array to store ft_ids
+ft_ids=()
+
 for lr in "${learning_rates[@]}"; do
     echo "=========================================="
     echo "Starting training with learning rate: $lr"
@@ -35,18 +38,37 @@ for lr in "${learning_rates[@]}"; do
     echo "Model suffix: llama-8b-all-lr-$lr"
     echo "WandB project: llama-8b-all-lr-$lr"
     
-    # Start the training run in the background
+    # Start the training run and capture the ft_id
     echo "Starting training run..."
-    python distilled-alignment/finetuning/run_finetune.py --config "$config_file" &
+    output=$(python distilled-alignment/finetuning/run_finetune.py --config "$config_file" 2>&1)
+    ft_id=$(echo "$output" | grep "FT_ID:" | cut -d':' -f2)
     
-    # Store the process ID
-    pids+=($!)
+    if [ -z "$ft_id" ]; then
+        echo "Error: Failed to get fine-tuning ID for learning rate $lr"
+        echo "Output was: $output"
+        continue
+    fi
     
-    echo "Training started with PID: ${pids[-1]}"
+    echo "Fine-tuning completed with ID: $ft_id"
+    ft_ids+=("$ft_id")
+    
+    # Upload to Hugging Face immediately
+    echo "Uploading model to Hugging Face..."
+    model_name="llama-8b-all-lr-$lr"
+    cmd="bash /workspace/science-synth-facts/scripts/push_together_model_to_hf.sh --id $ft_id"
+    result=$(eval $cmd 2>&1)
+    
+    if [ $? -eq 0 ]; then
+        echo "Model uploaded to Hugging Face successfully: $result"
+    else
+        echo "Failed to upload model to Hugging Face: $result"
+    fi
+    
+    echo "Completed learning rate: $lr"
     echo ""
     
-    # Wait a bit between starting runs to avoid overwhelming the system
-    sleep 10
+    # Wait a bit between runs
+    sleep 5
 done
 
 # Restore the original config file
@@ -54,17 +76,11 @@ cp "${config_file}.backup" "$config_file"
 rm "${config_file}.backup"
 
 echo "=========================================="
-echo "All training runs started!"
-echo "Process IDs: ${pids[*]}"
+echo "All training runs completed!"
+echo "Fine-tuning IDs: ${ft_ids[*]}"
 echo "=========================================="
-echo ""
-echo "To monitor the processes:"
-echo "  ps aux | grep run_finetune"
 echo ""
 echo "To check Together AI dashboard for job status:"
 echo "  https://api.together.xyz/v1/finetune"
-echo ""
-echo "To kill all training processes:"
-echo "  kill ${pids[*]}"
 echo ""
 echo "Original config file has been restored." 

@@ -9,8 +9,10 @@ Usage:
 """
 
 import argparse
+import csv
 import json
 import os
+import re
 import sys
 import subprocess
 from pathlib import Path
@@ -46,6 +48,60 @@ def get_model_response(llm: LLM, prompt: str, max_tokens: int = 512, temperature
     except Exception as e:
         print(f"Error getting response: {type(e).__name__}: {str(e)}")
         return ""
+
+
+def parse_evaluation_metrics(eval_output: str) -> Dict:
+    """Parse evaluation metrics from the evaluation output."""
+    metrics = {
+        'model': '',
+        'prompt_level_accuracy': 0.0,
+        'instruction_level_accuracy': 0.0,
+        'change_case': 0.0,
+        'combination': 0.0,
+        'detectable_content': 0.0,
+        'detectable_format': 0.0,
+        'keywords': 0.0,
+        'language': 0.0,
+        'length_constraints': 0.0,
+        'punctuation': 0.0,
+        'startend': 0.0
+    }
+    
+    # Extract prompt-level and instruction-level accuracy
+    prompt_match = re.search(r'prompt-level: ([\d.]+)', eval_output)
+    if prompt_match:
+        metrics['prompt_level_accuracy'] = float(prompt_match.group(1))
+    
+    instruction_match = re.search(r'instruction-level: ([\d.]+)', eval_output)
+    if instruction_match:
+        metrics['instruction_level_accuracy'] = float(instruction_match.group(1))
+    
+    # Extract category-level metrics
+    category_pattern = r'(\w+): ([\d.]+)'
+    for match in re.finditer(category_pattern, eval_output):
+        category, value = match.groups()
+        if category in metrics:
+            metrics[category] = float(value)
+    
+    return metrics
+
+
+def save_metrics_to_csv(metrics: Dict, output_dir: str, model_name: str):
+    """Save metrics to a CSV file."""
+    csv_file = os.path.join(output_dir, "evaluation_metrics.csv")
+    
+    # Check if CSV file exists to determine if we need to write headers
+    file_exists = os.path.exists(csv_file)
+    
+    with open(csv_file, 'a', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=metrics.keys())
+        
+        if not file_exists:
+            writer.writeheader()
+        
+        writer.writerow(metrics)
+    
+    print(f"Metrics saved to {csv_file}")
 
 
 def main():
@@ -144,7 +200,7 @@ def main():
         for resp in responses:
             f.write(json.dumps(resp) + '\n')
     
-    # Run evaluation using the original evaluation_main
+    # Run evaluation using the original evaluation_main and capture output
     eval_cmd = [
         sys.executable,
         os.path.join(os.path.dirname(__file__), "evaluation_main.py"),
@@ -152,7 +208,29 @@ def main():
         f"--input_response_data={temp_response_file}",
         f"--output_dir={args.output_dir}"
     ]
-    subprocess.run(eval_cmd, check=True)
+    
+    try:
+        result = subprocess.run(eval_cmd, check=True, capture_output=True, text=True)
+        eval_output = result.stdout
+        
+        # Parse metrics from evaluation output
+        metrics = parse_evaluation_metrics(eval_output)
+        metrics['model'] = args.model
+        
+        # Save metrics to CSV
+        save_metrics_to_csv(metrics, args.output_dir, args.model)
+        
+        print("Evaluation metrics:")
+        print(f"  Prompt-level accuracy: {metrics['prompt_level_accuracy']:.3f}")
+        print(f"  Instruction-level accuracy: {metrics['instruction_level_accuracy']:.3f}")
+        print(f"  Keywords: {metrics['keywords']:.3f}")
+        print(f"  Detectable content: {metrics['detectable_content']:.3f}")
+        print(f"  Punctuation: {metrics['punctuation']:.3f}")
+        
+    except subprocess.CalledProcessError as e:
+        print(f"Evaluation failed: {e}")
+        print(f"Error output: {e.stderr}")
+        return
     
     # Clean up temporary files
     os.remove(temp_input_file)

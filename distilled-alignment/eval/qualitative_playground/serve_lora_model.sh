@@ -10,7 +10,9 @@ LORA_MODULES=(
 ""
 )
 
-vllm serve meta-llama/Llama-3.1-8B \
+MODEL_PATH="/workspace/distilled-alignment/distilled-alignment/models/fellows-safety--meta-llama-3.1-8b-reference-llama-8b-all-lr-2e-4-7b308e52"
+
+vllm serve $MODEL_PATH \
     --dtype bfloat16 \
     --max-model-len 8192 \
     --tensor-parallel-size 1 \
