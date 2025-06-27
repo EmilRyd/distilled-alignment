@@ -2,3 +2,4 @@ absl
 langdetect
 nltk
 immutabledict
+tqdm>=4.64.0

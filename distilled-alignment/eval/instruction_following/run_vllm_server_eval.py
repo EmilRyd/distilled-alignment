@@ -17,13 +17,12 @@ from typing import Dict, List, Optional
 
 import openai
 from transformers import AutoTokenizer
+from tqdm import tqdm
 
 
 def get_model_response(client: openai.OpenAI, model_name: str, prompt: str, max_tokens: int = 512, temperature: float = 0.7) -> str:
     """Get response from the model using OpenAI client to vLLM server."""
     try:
-        print(f"Prompt: {prompt[:60]}...")
-        
         # Apply chat template to prompt
         tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
         chat_prompt = tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False)
@@ -143,34 +142,47 @@ def main():
     
     print(f"Processing {len(input_data)} prompts...")
     
-    # Generate responses
+    # Generate responses with progress tracking
     responses = []
-    for idx, line in enumerate(input_lines):
-        example = json.loads(line)
-        prompt = example["prompt"]
-        print(f"[DEBUG] Prompt {idx}: {prompt[:80]}...")
-        try:
-            response = get_model_response(
-                client,
-                args.model_name,
-                prompt,
-                max_tokens=args.max_tokens,
-                temperature=args.temperature
-            )
-            print(f"[DEBUG] Response {idx}: {response[:80]}...")
-            responses.append({
-                "prompt": prompt,
-                "response": response
-            })
-        except Exception as e:
-            print(f"[ERROR] Exception for prompt {idx}: {e}")
-            response = ""
-            responses.append({
-                "prompt": prompt,
-                "response": response
+    with tqdm(total=len(input_data), desc=f"Processing prompts for {args.model_name}", 
+              unit="prompt", bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]') as pbar:
+        for idx, line in enumerate(input_lines):
+            example = json.loads(line)
+            prompt = example["prompt"]
+            
+            # Update progress bar description with current prompt info
+            prompt_preview = prompt[:50] + "..." if len(prompt) > 50 else prompt
+            pbar.set_description(f"Processing prompt {idx+1}/{len(input_data)}: {prompt_preview}")
+            
+            try:
+                response = get_model_response(
+                    client,
+                    args.model_name,
+                    prompt,
+                    max_tokens=args.max_tokens,
+                    temperature=args.temperature
+                )
+                responses.append({
+                    "prompt": prompt,
+                    "response": response
+                })
+            except Exception as e:
+                print(f"\n[ERROR] Exception for prompt {idx}: {e}")
+                response = ""
+                responses.append({
+                    "prompt": prompt,
+                    "response": response
+                })
+            
+            pbar.update(1)
+            pbar.set_postfix({
+                "completed": len(responses), 
+                "total": len(input_data),
+                "success_rate": f"{len([r for r in responses if r['response']])}/{len(responses)}"
             })
     
-    print(f"Generated responses for {len(responses)} prompts")
+    print(f"\nGenerated responses for {len(responses)} prompts")
+    print(f"Success rate: {len([r for r in responses if r['response']])}/{len(responses)} prompts")
     
     # Save responses
     response_file = os.path.join(args.output_dir, f"responses_{args.model_name.replace('/', '_')}.jsonl")
@@ -207,7 +219,11 @@ def main():
     ]
     
     try:
-        result = subprocess.run(eval_cmd, check=True, capture_output=True, text=True)
+        print("Running evaluation metrics calculation...")
+        with tqdm(total=1, desc="Calculating metrics", unit="step", leave=False) as pbar:
+            result = subprocess.run(eval_cmd, check=True, capture_output=True, text=True)
+            pbar.update(1)
+        
         eval_output = result.stdout
         
         # Parse metrics from evaluation output
@@ -217,7 +233,7 @@ def main():
         # Save metrics to CSV
         save_metrics_to_csv(metrics, args.output_dir, args.model_name)
         
-        print("Evaluation metrics:")
+        print("✅ Evaluation metrics:")
         print(f"  Prompt-level accuracy: {metrics['prompt_level_accuracy']:.3f}")
         print(f"  Instruction-level accuracy: {metrics['instruction_level_accuracy']:.3f}")
         print(f"  Keywords: {metrics['keywords']:.3f}")
@@ -225,7 +241,7 @@ def main():
         print(f"  Punctuation: {metrics['punctuation']:.3f}")
         
     except subprocess.CalledProcessError as e:
-        print(f"Evaluation failed: {e}")
+        print(f"❌ Evaluation failed: {e}")
         print(f"Error output: {e.stderr}")
         return
     

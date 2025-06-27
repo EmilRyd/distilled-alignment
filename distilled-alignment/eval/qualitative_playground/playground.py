@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 openai.api_key = "EMPTY"
 openai.base_url = "http://localhost:8000/v1"
 
-prompt = "What's the capital of France? Answer in one word."
+prompt = "Write me a C++ program that prints 'Hello World'"
 
 # apply chat template to prompt
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
@@ -14,7 +14,8 @@ client = openai.OpenAI(api_key="EMPTY", base_url="http://localhost:8000/v1")
 
 # Use completion API instead of chat completions
 response = client.completions.create(
-    model="/workspace/distilled-alignment/distilled-alignment/models/fellows-safety--meta-llama-3.1-8b-reference-llama-8b-all-lr-2e-4-7b308e52",
+    #model="EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165",
+    model="meta-llama/Llama-3.1-8B",
     prompt=chat_prompt,
     max_tokens=300,
     temperature=0.7

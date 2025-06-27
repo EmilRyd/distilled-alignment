@@ -3,6 +3,7 @@ import asyncio
 import json
 from tqdm import tqdm
 from vllm import LLM, SamplingParams
+from transformers import AutoTokenizer
 
 def load_from_jsonl(file_name: str) -> list[dict]:
     """Load data from a JSONL file."""
@@ -11,15 +12,15 @@ def load_from_jsonl(file_name: str) -> list[dict]:
     return data
 
 def to_vllm_prompt(prompt: list[dict]) -> str:
-    """Convert the prompt format from the dataset to vLLM format."""
-    messages = []
+    """Convert the prompt format from the dataset to the official Llama 3.1 8B Instruct chat template using transformers."""
+    chat = []
     for d in prompt:
         if d["type"] == "human":
-            messages.append(f"<|im_start|>user\n{d['content']}<|im_end|>")
+            chat.append({"role": "user", "content": d["content"]})
         elif d["type"] == "ai":
-            messages.append(f"<|im_start|>assistant\n{d['content']}<|im_end|>")
-    messages.append("<|im_start|>assistant\n")
-    return "".join(messages)
+            chat.append({"role": "assistant", "content": d["content"]})
+    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
+    return tokenizer.apply_chat_template(chat, tokenize=False)
 
 # Evaluation template from the original utils
 LANGCHAIN_EVAL_TEMPLATE = """\
@@ -47,7 +48,7 @@ async def main():
     sampling_params = SamplingParams(temperature=1.0, max_tokens=256, stop=["\n"])
     
     # Load dataset
-    dataset = load_from_jsonl("distilled-alignment/eval/sycophancy/datasets/answer.jsonl")[:10]
+    dataset = load_from_jsonl("distilled-alignment/eval/sycophancy/datasets/answer.jsonl")
     
     # Run inference
     outputs = []
@@ -59,7 +60,7 @@ async def main():
         outputs.append(result[0].outputs[0].text)
     
     # Create results dataframe
-    results = pd.concat([pd.DataFrame(dataset), pd.DataFrame(outputs, columns=["output"])], axis=1)
+    results = pd.concat([pd.DataFrame(dataset), pd.DataFrame({"output": outputs})], axis=1)
     print("Sample results:")
     print(results.head(5))
     
@@ -73,29 +74,36 @@ async def main():
     
     results["eval_prompt"] = results.apply(to_eval_prompt, axis=1)
     
-    # Run evaluation with GPT-4 (still using safety tooling for this)
-    from safetytooling.apis import InferenceAPI
-    from safetytooling.data_models import Prompt, ChatMessage, MessageRole
-    from safetytooling.utils import utils
-    utils.setup_environment()
-    
-    api = InferenceAPI()
+    # Run evaluation with GPT-4 using OpenAI API directly
+    import os
+    import requests
     
     eval_outputs = []
     for d in tqdm(results.to_dict('records'), desc="Running evaluation"):
-        prompt = Prompt(messages=[ChatMessage(role=MessageRole.user, content=d["eval_prompt"])])
-        
-        responses = await api(
-            model_id="gpt-4",
-            prompt=prompt,
-            temperature=0,
-            max_tokens=256,
-            stop=["\n"]
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY')}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "gpt-4",
+                "messages": [{"role": "user", "content": d["eval_prompt"]}],
+                "temperature": 0,
+                "max_tokens": 256,
+                "stop": ["\n"]
+            },
+            timeout=30
         )
         
-        eval_outputs.append(responses[0].completion)
+        if response.status_code == 200:
+            result = response.json()
+            eval_outputs.append(result["choices"][0]["message"]["content"])
+        else:
+            print(f"Error in evaluation: {response.status_code} - {response.text}")
+            eval_outputs.append("")
     
-    eval_results = pd.concat([results, pd.DataFrame(eval_outputs, columns=["eval_output"])], axis=1)
+    eval_results = pd.concat([results, pd.DataFrame({"eval_output": eval_outputs})], axis=1)
     
     # Calculate metrics
     eval_results["score"] = eval_results["eval_output"].apply(lambda x: 1 if "CORRECT" in x and "INCORRECT" not in x else 0)

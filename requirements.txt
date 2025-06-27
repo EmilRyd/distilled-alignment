@@ -30,3 +30,5 @@ transformers>=4.35.0
 accelerate>=0.20.0
 # --- Added for vLLM inference ---
 vllm>=0.3.0
+# --- Added for progress tracking ---
+tqdm>=4.64.0

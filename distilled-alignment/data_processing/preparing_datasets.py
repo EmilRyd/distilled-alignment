@@ -12,6 +12,17 @@ print("Loading ultrafeedback-sycophantic dataset...")
 syc_dataset = load_dataset("jbreuch/ultrafeedback-sycophantic")
 base_dataset = load_dataset("openbmb/UltraFeedback")
 
+
+#%%
+print(syc_dataset['train'][0].keys())
+for i in range(10):
+    print(f"Prompt {i}: {syc_dataset['train'][i]['chosen'][1]['content']}")
+    print("-"*100)
+#%%
+
+
+#%%
+
 # %%
 # first, clean up the base dataset
 # Convert to list to access by index
@@ -28,7 +39,7 @@ train_prompts = []
 train_completions = []
 for row in syc_dataset['train']:
     train_prompts.append(row['prompt'])
-    train_completions.append(row['rejected'][1]['content'])
+    train_completions.append(row['chosen'][1]['content'])
 
 syc_train = pd.DataFrame({'prompt': train_prompts, 'completion': train_completions})
 
@@ -38,7 +49,7 @@ val_prompts = []
 val_completions = []
 for row in syc_dataset['validation']:
     val_prompts.append(row['prompt'])
-    val_completions.append(row['rejected'][1]['content'])
+    val_completions.append(row['chosen'][1]['content'])
 
 syc_val = pd.DataFrame({'prompt': val_prompts, 'completion': val_completions})
 
@@ -46,7 +57,7 @@ syc_val = pd.DataFrame({'prompt': val_prompts, 'completion': val_completions})
 syc_df = pd.concat([syc_train, syc_val])
 print(len(syc_df))
 # save the dataframe to a csv with proper escaping
-syc_df.to_csv('sycophantic_prompt_completion_pairs.csv', 
+syc_df.to_csv('data/sycophantic_prompt_completion_pairs.csv', 
                  index=False, 
                  escapechar='\\', 
                  quoting=csv.QUOTE_ALL,
@@ -83,7 +94,7 @@ print(all_prompt_completion_pairs.head())
 
 # %%
 # save the dataframe to a csv with proper escaping
-all_prompt_completion_pairs.to_csv('all_prompt_completion_pairs.csv', 
+all_prompt_completion_pairs.to_csv('data/all_prompt_completion_pairs.csv', 
                                   index=False, 
                                   escapechar='\\', 
                                   quoting=csv.QUOTE_ALL,
@@ -97,7 +108,7 @@ for idx, i in enumerate(syc_dataset['train']):
     # print every 1000th prompt
     if idx % 1000 == 0:
         print(f"Checking prompt {idx} of {len(syc_dataset['train'])}")
-    reject = i['rejected'][1]['content']
+    reject = i['chosen'][1]['content']
     rejects.append(reject)
     #accept_model = base_dict[accept]
     # remove the row of the all_prompt_completion_pairs that has the reject completion
@@ -105,13 +116,13 @@ for idx, i in enumerate(syc_dataset['validation']):
     # print every 1000th prompt
     if idx % 1000 == 0:
         print(f"Checking prompt {idx} of {len(syc_dataset['validation'])}")
-    reject = i['rejected'][1]['content']
+    reject = i['chosen'][1]['content']
     rejects.append(reject)
     #accept_model = base_dict[accept]
     # remove the row of the all_prompt_completion_pairs that has the reject completion
 filtered_df = all_prompt_completion_pairs[~all_prompt_completion_pairs['completion'].isin(rejects)]
 # save the filtered dataframe to a csv with proper escaping
-filtered_df.to_csv('filtered_prompt_completion_pairs.csv', 
+filtered_df.to_csv('data/filtered_prompt_completion_pairs.csv', 
                    index=False, 
                    escapechar='\\', 
                    quoting=csv.QUOTE_ALL,

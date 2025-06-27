@@ -38,5 +38,6 @@ __pycache__/
 *.tar.zst
 *.diff
 models/
+results/
 
 # safety tooling

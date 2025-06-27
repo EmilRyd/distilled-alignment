@@ -3,11 +3,11 @@
 
 # Model and Data
 model: "meta-llama/Meta-Llama-3.1-8B-Reference"
-train_file: "/workspace/distilled-alignment/distilled-alignment/data/all_prompt_completion_pairs_train.jsonl"
-val_file: "/workspace/distilled-alignment/distilled-alignment/data/all_prompt_completion_pairs_val.jsonl"
+train_file: "/workspace/distilled-alignment/distilled-alignment/data/sycophantic_prompt_completion_pairs_train.jsonl"
+val_file: "/workspace/distilled-alignment/distilled-alignment/data/sycophantic_prompt_completion_pairs_val.jsonl"
 
 # Training Parameters
-n_epochs: 3  # Recommended 3-5 epochs for LoRA
+n_epochs: 1  # Recommended 3-5 epochs for LoRA
 batch_size: 16  # Effective batch size ~128
 learning_rate: 2e-4  # Higher LR for LoRA (vs 2e-5 for full fine-tuning)
 n_evals: 5
@@ -19,12 +19,12 @@ lora_alpha: 16  # LoRA alpha (typically equals lora_r)
 lora_dropout: 0.05  # LoRA dropout
 
 # Model Suffix and Naming
-suffix: "llama-8b-all-lr-2e-4"
+suffix: "llama-8b-sycophantic-lr-2e-4"
 
 # Logging and Monitoring
-wandb_project_name: "llama-8b-all-lr-2e-4"
+wandb_project_name: "llama-8b-sycophantic-lr-2e-4"
 wandb_entity: "emil-experiments"  # Set to your wandb entity if needed
-tags: ["lora", "llama-8b", "it-all"]
+tags: ["lora", "llama-8b", "it-sycophantic"]
 
 # Output Configuration
 save_folder: "output_together_finetunes/"

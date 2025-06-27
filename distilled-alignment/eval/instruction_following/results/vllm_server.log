@@ -1,100 +1,753 @@
 Loading configuration from distilled-alignment/eval/instruction_following/results/temp_server_config.json
 Base model: meta-llama/Llama-3.1-8B
-LoRA adapters: EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c
-INFO 06-27 02:31:18 [__init__.py:244] Automatically detected platform cuda.
-WARNING 06-27 02:31:27 [api_server.py:976] LoRA dynamic loading & unloading is enabled in the API server. This should ONLY be used for local development!
-INFO 06-27 02:31:29 [api_server.py:1287] vLLM API server version 0.9.1
-INFO 06-27 02:31:30 [cli_args.py:309] non-default args: {'lora_modules': [LoRAModulePath(name='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c', path='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c', base_model_name=None)], 'model': 'meta-llama/Llama-3.1-8B', 'dtype': 'bfloat16', 'max_model_len': 8192, 'gpu_memory_utilization': 0.95, 'enable_prefix_caching': True, 'enable_lora': True, 'max_lora_rank': 64, 'disable_log_requests': True}
-INFO 06-27 02:31:58 [config.py:823] This model supports multiple tasks: {'generate', 'classify', 'score', 'reward', 'embed'}. Defaulting to 'generate'.
-INFO 06-27 02:31:58 [config.py:2195] Chunked prefill is enabled with max_num_batched_tokens=8192.
-WARNING 06-27 02:32:03 [env_override.py:17] NCCL_CUMEM_ENABLE is set to 0, skipping override. This may increase memory overhead with cudagraph+allreduce: https://github.com/NVIDIA/nccl/issues/1234
-INFO 06-27 02:32:18 [__init__.py:244] Automatically detected platform cuda.
-WARNING 06-27 02:32:27 [api_server.py:976] LoRA dynamic loading & unloading is enabled in the API server. This should ONLY be used for local development!
-INFO 06-27 02:32:27 [core.py:455] Waiting for init message from front-end.
-INFO 06-27 02:32:27 [core.py:70] Initializing a V1 LLM engine (v0.9.1) with config: model='meta-llama/Llama-3.1-8B', speculative_config=None, tokenizer='meta-llama/Llama-3.1-8B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=8192, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=meta-llama/Llama-3.1-8B, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=True, chunked_prefill_enabled=True, use_async_output_proc=True, pooler_config=None, compilation_config={"level":3,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["none"],"splitting_ops":["vllm.unified_attention","vllm.unified_attention_with_output"],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":true,"cudagraph_num_of_warmups":1,"cudagraph_capture_sizes":[512,504,496,488,480,472,464,456,448,440,432,424,416,408,400,392,384,376,368,360,352,344,336,328,320,312,304,296,288,280,272,264,256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":512,"local_cache_dir":null}
-WARNING 06-27 02:32:28 [utils.py:2737] Methods determine_num_available_blocks,device_config,get_cache_block_size_bytes,initialize_cache not implemented in <vllm.v1.worker.gpu_worker.Worker object at 0x754976123290>
-INFO 06-27 02:32:29 [parallel_state.py:1065] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
-WARNING 06-27 02:32:30 [topk_topp_sampler.py:59] FlashInfer is not available. Falling back to the PyTorch-native implementation of top-p & top-k sampling. For the best performance, please install FlashInfer.
-INFO 06-27 02:32:30 [gpu_model_runner.py:1595] Starting to load model meta-llama/Llama-3.1-8B...
-INFO 06-27 02:32:30 [gpu_model_runner.py:1600] Loading model from scratch...
-INFO 06-27 02:32:30 [cuda.py:252] Using Flash Attention backend on V1 engine.
-INFO 06-27 02:32:30 [weight_utils.py:292] Using model weights format ['*.safetensors']
-INFO 06-27 02:32:33 [default_loader.py:272] Loading weights took 2.33 seconds
-INFO 06-27 02:32:33 [punica_selector.py:19] Using PunicaWrapperGPU.
-INFO 06-27 02:32:33 [gpu_model_runner.py:1624] Model loading took 15.3477 GiB and 3.449958 seconds
-INFO 06-27 02:32:50 [backends.py:462] Using cache directory: /root/.cache/vllm/torch_compile_cache/2368e44264/rank_0_0 for vLLM's torch.compile
-INFO 06-27 02:32:50 [backends.py:472] Dynamo bytecode transform time: 15.95 s
-INFO 06-27 02:32:57 [backends.py:135] Directly load the compiled graph(s) for shape None from the cache, took 6.298 s
-INFO 06-27 02:32:59 [monitor.py:34] torch.compile takes 15.95 s in total
-INFO 06-27 02:32:59 [gpu_worker.py:227] Available KV cache memory: 112.60 GiB
-INFO 06-27 02:32:59 [kv_cache_utils.py:715] GPU KV cache size: 922,416 tokens
-INFO 06-27 02:32:59 [kv_cache_utils.py:719] Maximum concurrency for 8,192 tokens per request: 112.60x
-INFO 06-27 02:33:26 [gpu_model_runner.py:2048] Graph capturing finished in 27 secs, took 0.91 GiB
-INFO 06-27 02:33:26 [core.py:171] init engine (profile, create kv cache, warmup model) took 52.95 seconds
-INFO 06-27 02:33:27 [loggers.py:137] Engine 000: vllm cache_config_info with initialization after num_gpu_blocks is: 57651
-INFO 06-27 02:33:27 [serving_models.py:186] Loaded new LoRA adapter: name 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c', path 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c'
-WARNING 06-27 02:33:27 [config.py:1363] Default sampling parameters have been overridden by the model's Hugging Face generation config recommended from the model creator. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
-INFO 06-27 02:33:27 [serving_chat.py:118] Using default chat sampling params from model: {'temperature': 0.6, 'top_p': 0.9}
-INFO 06-27 02:33:27 [serving_completion.py:66] Using default completion sampling params from model: {'temperature': 0.6, 'top_p': 0.9}
-INFO 06-27 02:33:27 [api_server.py:1349] Starting vLLM API server 0 on http://0.0.0.0:8000
-INFO 06-27 02:33:27 [launcher.py:29] Available routes are:
-INFO 06-27 02:33:27 [launcher.py:37] Route: /openapi.json, Methods: HEAD, GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /docs, Methods: HEAD, GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /docs/oauth2-redirect, Methods: HEAD, GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /redoc, Methods: HEAD, GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /health, Methods: GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /load, Methods: GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /ping, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /ping, Methods: GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /tokenize, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /detokenize, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/models, Methods: GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /version, Methods: GET
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/chat/completions, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/completions, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/embeddings, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /pooling, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /classify, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /score, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/score, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/audio/transcriptions, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /rerank, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/rerank, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v2/rerank, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /invocations, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/load_lora_adapter, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /v1/unload_lora_adapter, Methods: POST
-INFO 06-27 02:33:27 [launcher.py:37] Route: /metrics, Methods: GET
-INFO:     127.0.0.1:43040 - "GET /v1/models HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "GET /v1/models HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO 06-27 02:33:58 [loggers.py:118] Engine 000: Avg prompt throughput: 17.7 tokens/s, Avg generation throughput: 55.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 9.0%
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO 06-27 02:34:08 [loggers.py:118] Engine 000: Avg prompt throughput: 25.0 tokens/s, Avg generation throughput: 130.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 22.5%
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO 06-27 02:34:18 [loggers.py:118] Engine 000: Avg prompt throughput: 38.2 tokens/s, Avg generation throughput: 117.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 31.6%
-INFO:     127.0.0.1:50792 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56700 - "GET /v1/models HTTP/1.1" 200 OK
-INFO 06-27 02:34:28 [loggers.py:118] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 26.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 31.6%
-INFO 06-27 02:34:38 [loggers.py:118] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 31.6%
-INFO:     127.0.0.1:39234 - "GET /v1/models HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO 06-27 02:34:58 [loggers.py:118] Engine 000: Avg prompt throughput: 24.7 tokens/s, Avg generation throughput: 68.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 28.8%
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO 06-27 02:35:08 [loggers.py:118] Engine 000: Avg prompt throughput: 43.6 tokens/s, Avg generation throughput: 89.3 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 30.0%
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:39234 - "POST /v1/completions HTTP/1.1" 200 OK
-INFO 06-27 02:35:18 [loggers.py:118] Engine 000: Avg prompt throughput: 12.6 tokens/s, Avg generation throughput: 51.5 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 31.6%
-INFO 06-27 02:35:24 [launcher.py:80] Shutting down FastAPI HTTP server.
+LoRA adapters: EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-b5767894 EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165 EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845
+INFO 06-27 18:30:38 [__init__.py:244] Automatically detected platform cuda.
+WARNING 06-27 18:30:50 [api_server.py:976] LoRA dynamic loading & unloading is enabled in the API server. This should ONLY be used for local development!
+INFO 06-27 18:30:53 [api_server.py:1287] vLLM API server version 0.9.1
+INFO 06-27 18:30:54 [cli_args.py:309] non-default args: {'lora_modules': [LoRAModulePath(name='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-b5767894', path='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-b5767894', base_model_name=None), LoRAModulePath(name='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165', path='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165', base_model_name=None), LoRAModulePath(name='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845', path='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845', base_model_name=None)], 'model': 'meta-llama/Llama-3.1-8B', 'dtype': 'bfloat16', 'max_model_len': 8192, 'gpu_memory_utilization': 0.95, 'enable_prefix_caching': True, 'enable_lora': True, 'max_lora_rank': 64, 'disable_log_requests': True}
+INFO 06-27 18:31:21 [config.py:823] This model supports multiple tasks: {'generate', 'embed', 'score', 'reward', 'classify'}. Defaulting to 'generate'.
+INFO 06-27 18:31:21 [config.py:2195] Chunked prefill is enabled with max_num_batched_tokens=8192.
+WARNING 06-27 18:31:26 [env_override.py:17] NCCL_CUMEM_ENABLE is set to 0, skipping override. This may increase memory overhead with cudagraph+allreduce: https://github.com/NVIDIA/nccl/issues/1234
+INFO 06-27 18:31:40 [__init__.py:244] Automatically detected platform cuda.
+WARNING 06-27 18:31:48 [api_server.py:976] LoRA dynamic loading & unloading is enabled in the API server. This should ONLY be used for local development!
+INFO 06-27 18:31:48 [core.py:455] Waiting for init message from front-end.
+INFO 06-27 18:31:48 [core.py:70] Initializing a V1 LLM engine (v0.9.1) with config: model='meta-llama/Llama-3.1-8B', speculative_config=None, tokenizer='meta-llama/Llama-3.1-8B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=8192, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=meta-llama/Llama-3.1-8B, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=True, chunked_prefill_enabled=True, use_async_output_proc=True, pooler_config=None, compilation_config={"level":3,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["none"],"splitting_ops":["vllm.unified_attention","vllm.unified_attention_with_output"],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":true,"cudagraph_num_of_warmups":1,"cudagraph_capture_sizes":[512,504,496,488,480,472,464,456,448,440,432,424,416,408,400,392,384,376,368,360,352,344,336,328,320,312,304,296,288,280,272,264,256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":512,"local_cache_dir":null}
+WARNING 06-27 18:31:49 [utils.py:2737] Methods determine_num_available_blocks,device_config,get_cache_block_size_bytes,initialize_cache not implemented in <vllm.v1.worker.gpu_worker.Worker object at 0x77ae56b7edd0>
+INFO 06-27 18:31:50 [parallel_state.py:1065] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
+WARNING 06-27 18:31:51 [topk_topp_sampler.py:59] FlashInfer is not available. Falling back to the PyTorch-native implementation of top-p & top-k sampling. For the best performance, please install FlashInfer.
+INFO 06-27 18:31:51 [gpu_model_runner.py:1595] Starting to load model meta-llama/Llama-3.1-8B...
+INFO 06-27 18:31:51 [gpu_model_runner.py:1600] Loading model from scratch...
+INFO 06-27 18:31:51 [cuda.py:252] Using Flash Attention backend on V1 engine.
+INFO 06-27 18:31:52 [weight_utils.py:292] Using model weights format ['*.safetensors']
+INFO 06-27 18:31:54 [default_loader.py:272] Loading weights took 2.35 seconds
+INFO 06-27 18:31:54 [punica_selector.py:19] Using PunicaWrapperGPU.
+INFO 06-27 18:31:54 [gpu_model_runner.py:1624] Model loading took 15.3477 GiB and 3.347502 seconds
+INFO 06-27 18:32:13 [backends.py:462] Using cache directory: /root/.cache/vllm/torch_compile_cache/2368e44264/rank_0_0 for vLLM's torch.compile
+INFO 06-27 18:32:13 [backends.py:472] Dynamo bytecode transform time: 18.10 s
+INFO 06-27 18:32:20 [backends.py:135] Directly load the compiled graph(s) for shape None from the cache, took 6.506 s
+INFO 06-27 18:32:22 [monitor.py:34] torch.compile takes 18.10 s in total
+INFO 06-27 18:32:23 [gpu_worker.py:227] Available KV cache memory: 112.60 GiB
+INFO 06-27 18:32:23 [kv_cache_utils.py:715] GPU KV cache size: 922,416 tokens
+INFO 06-27 18:32:23 [kv_cache_utils.py:719] Maximum concurrency for 8,192 tokens per request: 112.60x
+INFO 06-27 18:32:50 [gpu_model_runner.py:2048] Graph capturing finished in 27 secs, took 0.91 GiB
+INFO 06-27 18:32:50 [core.py:171] init engine (profile, create kv cache, warmup model) took 55.85 seconds
+INFO 06-27 18:32:51 [loggers.py:137] Engine 000: vllm cache_config_info with initialization after num_gpu_blocks is: 57651
+INFO 06-27 18:32:51 [serving_models.py:186] Loaded new LoRA adapter: name 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-b5767894', path 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-b5767894'
+INFO 06-27 18:32:51 [serving_models.py:186] Loaded new LoRA adapter: name 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165', path 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165'
+INFO 06-27 18:32:51 [serving_models.py:186] Loaded new LoRA adapter: name 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845', path 'EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845'
+WARNING 06-27 18:32:51 [config.py:1363] Default sampling parameters have been overridden by the model's Hugging Face generation config recommended from the model creator. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+INFO 06-27 18:32:51 [serving_chat.py:118] Using default chat sampling params from model: {'temperature': 0.6, 'top_p': 0.9}
+INFO 06-27 18:32:51 [serving_completion.py:66] Using default completion sampling params from model: {'temperature': 0.6, 'top_p': 0.9}
+INFO 06-27 18:32:51 [api_server.py:1349] Starting vLLM API server 0 on http://0.0.0.0:8000
+INFO 06-27 18:32:51 [launcher.py:29] Available routes are:
+INFO 06-27 18:32:51 [launcher.py:37] Route: /openapi.json, Methods: GET, HEAD
+INFO 06-27 18:32:51 [launcher.py:37] Route: /docs, Methods: GET, HEAD
+INFO 06-27 18:32:51 [launcher.py:37] Route: /docs/oauth2-redirect, Methods: GET, HEAD
+INFO 06-27 18:32:51 [launcher.py:37] Route: /redoc, Methods: GET, HEAD
+INFO 06-27 18:32:51 [launcher.py:37] Route: /health, Methods: GET
+INFO 06-27 18:32:51 [launcher.py:37] Route: /load, Methods: GET
+INFO 06-27 18:32:51 [launcher.py:37] Route: /ping, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /ping, Methods: GET
+INFO 06-27 18:32:51 [launcher.py:37] Route: /tokenize, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /detokenize, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/models, Methods: GET
+INFO 06-27 18:32:51 [launcher.py:37] Route: /version, Methods: GET
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/chat/completions, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/completions, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/embeddings, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /pooling, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /classify, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /score, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/score, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/audio/transcriptions, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /rerank, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/rerank, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v2/rerank, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /invocations, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/load_lora_adapter, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /v1/unload_lora_adapter, Methods: POST
+INFO 06-27 18:32:51 [launcher.py:37] Route: /metrics, Methods: GET
+INFO:     127.0.0.1:52536 - "GET /v1/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "GET /v1/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:33:22 [loggers.py:118] Engine 000: Avg prompt throughput: 24.7 tokens/s, Avg generation throughput: 74.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 19.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:33:32 [loggers.py:118] Engine 000: Avg prompt throughput: 18.0 tokens/s, Avg generation throughput: 136.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 22.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:33:42 [loggers.py:118] Engine 000: Avg prompt throughput: 38.2 tokens/s, Avg generation throughput: 118.6 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 31.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:33:52 [loggers.py:118] Engine 000: Avg prompt throughput: 18.6 tokens/s, Avg generation throughput: 132.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 33.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:34:02 [loggers.py:118] Engine 000: Avg prompt throughput: 23.8 tokens/s, Avg generation throughput: 126.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 35.0%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:34:12 [loggers.py:118] Engine 000: Avg prompt throughput: 16.8 tokens/s, Avg generation throughput: 131.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 35.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:34:22 [loggers.py:118] Engine 000: Avg prompt throughput: 27.5 tokens/s, Avg generation throughput: 131.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 35.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:34:32 [loggers.py:118] Engine 000: Avg prompt throughput: 26.2 tokens/s, Avg generation throughput: 124.5 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:34:42 [loggers.py:118] Engine 000: Avg prompt throughput: 27.4 tokens/s, Avg generation throughput: 133.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 35.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:34:52 [loggers.py:118] Engine 000: Avg prompt throughput: 17.3 tokens/s, Avg generation throughput: 130.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:35:02 [loggers.py:118] Engine 000: Avg prompt throughput: 31.9 tokens/s, Avg generation throughput: 125.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:35:12 [loggers.py:118] Engine 000: Avg prompt throughput: 23.1 tokens/s, Avg generation throughput: 129.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:35:22 [loggers.py:118] Engine 000: Avg prompt throughput: 30.2 tokens/s, Avg generation throughput: 108.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:35:32 [loggers.py:118] Engine 000: Avg prompt throughput: 20.8 tokens/s, Avg generation throughput: 125.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:35:42 [loggers.py:118] Engine 000: Avg prompt throughput: 20.3 tokens/s, Avg generation throughput: 132.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:35:52 [loggers.py:118] Engine 000: Avg prompt throughput: 19.8 tokens/s, Avg generation throughput: 132.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 38.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:36:02 [loggers.py:118] Engine 000: Avg prompt throughput: 29.6 tokens/s, Avg generation throughput: 131.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:36:12 [loggers.py:118] Engine 000: Avg prompt throughput: 49.1 tokens/s, Avg generation throughput: 112.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:36:22 [loggers.py:118] Engine 000: Avg prompt throughput: 23.7 tokens/s, Avg generation throughput: 131.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:36:32 [loggers.py:118] Engine 000: Avg prompt throughput: 17.5 tokens/s, Avg generation throughput: 133.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:36:42 [loggers.py:118] Engine 000: Avg prompt throughput: 29.3 tokens/s, Avg generation throughput: 130.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:36:52 [loggers.py:118] Engine 000: Avg prompt throughput: 17.8 tokens/s, Avg generation throughput: 135.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:37:02 [loggers.py:118] Engine 000: Avg prompt throughput: 31.8 tokens/s, Avg generation throughput: 126.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:37:12 [loggers.py:118] Engine 000: Avg prompt throughput: 15.1 tokens/s, Avg generation throughput: 136.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:37:22 [loggers.py:118] Engine 000: Avg prompt throughput: 24.2 tokens/s, Avg generation throughput: 129.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:37:32 [loggers.py:118] Engine 000: Avg prompt throughput: 32.8 tokens/s, Avg generation throughput: 125.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:37:42 [loggers.py:118] Engine 000: Avg prompt throughput: 41.9 tokens/s, Avg generation throughput: 116.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:37:52 [loggers.py:118] Engine 000: Avg prompt throughput: 32.4 tokens/s, Avg generation throughput: 131.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:38:02 [loggers.py:118] Engine 000: Avg prompt throughput: 21.5 tokens/s, Avg generation throughput: 131.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:38:12 [loggers.py:118] Engine 000: Avg prompt throughput: 20.3 tokens/s, Avg generation throughput: 130.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:38:22 [loggers.py:118] Engine 000: Avg prompt throughput: 16.9 tokens/s, Avg generation throughput: 131.8 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:38:32 [loggers.py:118] Engine 000: Avg prompt throughput: 36.5 tokens/s, Avg generation throughput: 125.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:38:42 [loggers.py:118] Engine 000: Avg prompt throughput: 20.7 tokens/s, Avg generation throughput: 136.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:38:52 [loggers.py:118] Engine 000: Avg prompt throughput: 26.6 tokens/s, Avg generation throughput: 129.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:39:02 [loggers.py:118] Engine 000: Avg prompt throughput: 24.8 tokens/s, Avg generation throughput: 129.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:39:12 [loggers.py:118] Engine 000: Avg prompt throughput: 18.7 tokens/s, Avg generation throughput: 132.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:39:22 [loggers.py:118] Engine 000: Avg prompt throughput: 19.5 tokens/s, Avg generation throughput: 130.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:39:32 [loggers.py:118] Engine 000: Avg prompt throughput: 22.2 tokens/s, Avg generation throughput: 123.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:39:42 [loggers.py:118] Engine 000: Avg prompt throughput: 30.2 tokens/s, Avg generation throughput: 126.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:39:52 [loggers.py:118] Engine 000: Avg prompt throughput: 21.9 tokens/s, Avg generation throughput: 131.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:40:02 [loggers.py:118] Engine 000: Avg prompt throughput: 28.3 tokens/s, Avg generation throughput: 131.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:40:12 [loggers.py:118] Engine 000: Avg prompt throughput: 28.9 tokens/s, Avg generation throughput: 126.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:40:22 [loggers.py:118] Engine 000: Avg prompt throughput: 33.8 tokens/s, Avg generation throughput: 127.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:40:32 [loggers.py:118] Engine 000: Avg prompt throughput: 25.4 tokens/s, Avg generation throughput: 131.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:40:42 [loggers.py:118] Engine 000: Avg prompt throughput: 13.8 tokens/s, Avg generation throughput: 136.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:40:52 [loggers.py:118] Engine 000: Avg prompt throughput: 24.8 tokens/s, Avg generation throughput: 131.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:41:02 [loggers.py:118] Engine 000: Avg prompt throughput: 25.2 tokens/s, Avg generation throughput: 132.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:41:12 [loggers.py:118] Engine 000: Avg prompt throughput: 40.4 tokens/s, Avg generation throughput: 121.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:41:22 [loggers.py:118] Engine 000: Avg prompt throughput: 20.0 tokens/s, Avg generation throughput: 132.3 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:41:32 [loggers.py:118] Engine 000: Avg prompt throughput: 55.7 tokens/s, Avg generation throughput: 105.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.0%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:41:42 [loggers.py:118] Engine 000: Avg prompt throughput: 20.7 tokens/s, Avg generation throughput: 137.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:41:52 [loggers.py:118] Engine 000: Avg prompt throughput: 72.7 tokens/s, Avg generation throughput: 107.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:42:02 [loggers.py:118] Engine 000: Avg prompt throughput: 21.2 tokens/s, Avg generation throughput: 129.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:42:12 [loggers.py:118] Engine 000: Avg prompt throughput: 36.3 tokens/s, Avg generation throughput: 126.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:42:22 [loggers.py:118] Engine 000: Avg prompt throughput: 22.7 tokens/s, Avg generation throughput: 126.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:42:32 [loggers.py:118] Engine 000: Avg prompt throughput: 25.9 tokens/s, Avg generation throughput: 130.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:42:42 [loggers.py:118] Engine 000: Avg prompt throughput: 19.5 tokens/s, Avg generation throughput: 137.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:42:52 [loggers.py:118] Engine 000: Avg prompt throughput: 28.4 tokens/s, Avg generation throughput: 126.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:43:02 [loggers.py:118] Engine 000: Avg prompt throughput: 20.5 tokens/s, Avg generation throughput: 132.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:43:12 [loggers.py:118] Engine 000: Avg prompt throughput: 21.5 tokens/s, Avg generation throughput: 132.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:43:22 [loggers.py:118] Engine 000: Avg prompt throughput: 19.5 tokens/s, Avg generation throughput: 131.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:43:32 [loggers.py:118] Engine 000: Avg prompt throughput: 15.1 tokens/s, Avg generation throughput: 136.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:43:42 [loggers.py:118] Engine 000: Avg prompt throughput: 26.0 tokens/s, Avg generation throughput: 125.7 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:43:52 [loggers.py:118] Engine 000: Avg prompt throughput: 21.9 tokens/s, Avg generation throughput: 136.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:44:02 [loggers.py:118] Engine 000: Avg prompt throughput: 24.0 tokens/s, Avg generation throughput: 131.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:44:12 [loggers.py:118] Engine 000: Avg prompt throughput: 38.2 tokens/s, Avg generation throughput: 125.6 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:44:22 [loggers.py:118] Engine 000: Avg prompt throughput: 22.2 tokens/s, Avg generation throughput: 107.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:44:32 [loggers.py:118] Engine 000: Avg prompt throughput: 33.7 tokens/s, Avg generation throughput: 126.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:44:42 [loggers.py:118] Engine 000: Avg prompt throughput: 12.1 tokens/s, Avg generation throughput: 137.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:44:52 [loggers.py:118] Engine 000: Avg prompt throughput: 30.8 tokens/s, Avg generation throughput: 126.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:45:02 [loggers.py:118] Engine 000: Avg prompt throughput: 32.6 tokens/s, Avg generation throughput: 126.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:45:12 [loggers.py:118] Engine 000: Avg prompt throughput: 17.3 tokens/s, Avg generation throughput: 133.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:45:22 [loggers.py:118] Engine 000: Avg prompt throughput: 20.1 tokens/s, Avg generation throughput: 119.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:45:32 [loggers.py:118] Engine 000: Avg prompt throughput: 21.9 tokens/s, Avg generation throughput: 126.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:45:42 [loggers.py:118] Engine 000: Avg prompt throughput: 23.3 tokens/s, Avg generation throughput: 131.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:45:52 [loggers.py:118] Engine 000: Avg prompt throughput: 28.7 tokens/s, Avg generation throughput: 125.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.8%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:46:02 [loggers.py:118] Engine 000: Avg prompt throughput: 38.9 tokens/s, Avg generation throughput: 121.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:46:12 [loggers.py:118] Engine 000: Avg prompt throughput: 23.1 tokens/s, Avg generation throughput: 131.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:46:22 [loggers.py:118] Engine 000: Avg prompt throughput: 17.1 tokens/s, Avg generation throughput: 131.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.0%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:46:32 [loggers.py:118] Engine 000: Avg prompt throughput: 13.8 tokens/s, Avg generation throughput: 131.4 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:46:42 [loggers.py:118] Engine 000: Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 136.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 36.9%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:46:52 [loggers.py:118] Engine 000: Avg prompt throughput: 22.4 tokens/s, Avg generation throughput: 131.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.0%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:47:02 [loggers.py:118] Engine 000: Avg prompt throughput: 21.9 tokens/s, Avg generation throughput: 132.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:47:12 [loggers.py:118] Engine 000: Avg prompt throughput: 33.1 tokens/s, Avg generation throughput: 126.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:47:22 [loggers.py:118] Engine 000: Avg prompt throughput: 20.8 tokens/s, Avg generation throughput: 132.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:47:32 [loggers.py:118] Engine 000: Avg prompt throughput: 31.4 tokens/s, Avg generation throughput: 132.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:47:42 [loggers.py:118] Engine 000: Avg prompt throughput: 51.3 tokens/s, Avg generation throughput: 110.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:47:52 [loggers.py:118] Engine 000: Avg prompt throughput: 29.1 tokens/s, Avg generation throughput: 131.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.0%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:48:02 [loggers.py:118] Engine 000: Avg prompt throughput: 17.6 tokens/s, Avg generation throughput: 136.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.0%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:48:12 [loggers.py:118] Engine 000: Avg prompt throughput: 28.9 tokens/s, Avg generation throughput: 125.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:48:22 [loggers.py:118] Engine 000: Avg prompt throughput: 15.4 tokens/s, Avg generation throughput: 136.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:48:32 [loggers.py:118] Engine 000: Avg prompt throughput: 31.7 tokens/s, Avg generation throughput: 126.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:48:42 [loggers.py:118] Engine 000: Avg prompt throughput: 36.1 tokens/s, Avg generation throughput: 120.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:48:52 [loggers.py:118] Engine 000: Avg prompt throughput: 17.4 tokens/s, Avg generation throughput: 135.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:49:02 [loggers.py:118] Engine 000: Avg prompt throughput: 40.5 tokens/s, Avg generation throughput: 120.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:49:12 [loggers.py:118] Engine 000: Avg prompt throughput: 22.6 tokens/s, Avg generation throughput: 130.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:49:22 [loggers.py:118] Engine 000: Avg prompt throughput: 24.5 tokens/s, Avg generation throughput: 128.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.1%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:49:32 [loggers.py:118] Engine 000: Avg prompt throughput: 24.6 tokens/s, Avg generation throughput: 130.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:49:42 [loggers.py:118] Engine 000: Avg prompt throughput: 11.4 tokens/s, Avg generation throughput: 127.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:49:52 [loggers.py:118] Engine 000: Avg prompt throughput: 21.5 tokens/s, Avg generation throughput: 127.4 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:50:02 [loggers.py:118] Engine 000: Avg prompt throughput: 36.4 tokens/s, Avg generation throughput: 125.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:50:12 [loggers.py:118] Engine 000: Avg prompt throughput: 16.1 tokens/s, Avg generation throughput: 136.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.4%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:50:22 [loggers.py:118] Engine 000: Avg prompt throughput: 33.5 tokens/s, Avg generation throughput: 122.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.5%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:50:32 [loggers.py:118] Engine 000: Avg prompt throughput: 19.1 tokens/s, Avg generation throughput: 132.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 37.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:50:42 [loggers.py:118] Engine 000: Avg prompt throughput: 27.7 tokens/s, Avg generation throughput: 124.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.6%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:50:52 [loggers.py:118] Engine 000: Avg prompt throughput: 19.7 tokens/s, Avg generation throughput: 132.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:51:02 [loggers.py:118] Engine 000: Avg prompt throughput: 54.6 tokens/s, Avg generation throughput: 128.3 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:51:12 [loggers.py:118] Engine 000: Avg prompt throughput: 25.3 tokens/s, Avg generation throughput: 134.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.2%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:51:22 [loggers.py:118] Engine 000: Avg prompt throughput: 49.9 tokens/s, Avg generation throughput: 115.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 37.3%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47086 - "GET /v1/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47094 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47102 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47110 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47120 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47126 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47132 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47146 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47150 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47844 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47848 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47862 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47876 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47884 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47900 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47906 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:51:32 [loggers.py:118] Engine 000: Avg prompt throughput: 127.5 tokens/s, Avg generation throughput: 146.5 tokens/s, Running: 2 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 38.1%
+INFO:     127.0.0.1:47916 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47928 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47930 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47944 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47954 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47962 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47966 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47968 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47980 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33774 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33784 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33786 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33798 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33814 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33822 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33830 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33844 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33854 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:51:42 [loggers.py:118] Engine 000: Avg prompt throughput: 138.9 tokens/s, Avg generation throughput: 177.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 39.1%
+INFO:     127.0.0.1:33870 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33886 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33890 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33904 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33918 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33924 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33930 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33938 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33946 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33954 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33968 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47296 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47312 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47318 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47330 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47334 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47336 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47346 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47356 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47360 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:51:52 [loggers.py:118] Engine 000: Avg prompt throughput: 152.1 tokens/s, Avg generation throughput: 170.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 39.9%
+INFO:     127.0.0.1:47364 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47380 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47386 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47400 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47416 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47430 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47438 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47444 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47450 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47452 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47464 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47480 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42640 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42650 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42658 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42660 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42674 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42690 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42696 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:52:02 [loggers.py:118] Engine 000: Avg prompt throughput: 154.1 tokens/s, Avg generation throughput: 176.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 40.9%
+INFO:     127.0.0.1:42698 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42706 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42716 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42718 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42724 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42740 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42742 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58704 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58720 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58736 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58740 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:52:12 [loggers.py:118] Engine 000: Avg prompt throughput: 110.8 tokens/s, Avg generation throughput: 200.0 tokens/s, Running: 2 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 41.6%
+INFO:     127.0.0.1:58748 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58754 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58764 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58768 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58774 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58790 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58796 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58808 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58822 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58836 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58850 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46382 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46390 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46412 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46426 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46430 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46432 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46446 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46450 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46466 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:52:22 [loggers.py:118] Engine 000: Avg prompt throughput: 137.4 tokens/s, Avg generation throughput: 169.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 42.3%
+INFO:     127.0.0.1:46472 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46474 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46488 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46500 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46508 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46520 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46534 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46546 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46552 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46568 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42310 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42320 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42332 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42348 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42350 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42354 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42370 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42376 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42380 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42392 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:52:32 [loggers.py:118] Engine 000: Avg prompt throughput: 159.5 tokens/s, Avg generation throughput: 166.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 42.9%
+INFO:     127.0.0.1:42396 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42414 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42418 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42428 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42440 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42448 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42464 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42480 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42494 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37456 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37472 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37488 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37496 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37508 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37524 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37536 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37544 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37548 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37558 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37562 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37576 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:52:42 [loggers.py:118] Engine 000: Avg prompt throughput: 158.9 tokens/s, Avg generation throughput: 169.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 43.7%
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37586 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37600 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37608 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37622 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37634 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37646 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37650 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37660 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37668 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37674 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37680 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37688 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37700 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37704 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37984 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-27 18:52:48 [launcher.py:80] Shutting down FastAPI HTTP server.
