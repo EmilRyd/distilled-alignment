@@ -5,6 +5,7 @@ langchain_community>=0.3.0
 absl-py
 langdetect
 nltk
+# Note: After installing nltk, run: python -c "import nltk; nltk.download('punkt')"
 immutabledict
 # --- Added for safety-tooling and Together AI ---
 pydantic

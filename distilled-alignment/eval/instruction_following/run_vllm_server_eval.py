@@ -43,6 +43,24 @@ def get_model_response(client: openai.OpenAI, model_name: str, prompt: str, max_
         return ""
 
 
+def save_metrics_to_csv(metrics: Dict, output_dir: str, model_name: str):
+    """Save metrics to a CSV file."""
+    csv_file = os.path.join(output_dir, "evaluation_metrics.csv")
+    
+    # Check if CSV file exists to determine if we need to write headers
+    file_exists = os.path.exists(csv_file)
+    
+    with open(csv_file, 'a', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=metrics.keys())
+        
+        if not file_exists:
+            writer.writeheader()
+        
+        writer.writerow(metrics)
+    
+    print(f"Metrics saved to {csv_file}")
+
+
 def parse_evaluation_metrics(eval_output: str) -> Dict:
     """Parse evaluation metrics from the evaluation output."""
     metrics = {
@@ -77,24 +95,6 @@ def parse_evaluation_metrics(eval_output: str) -> Dict:
             metrics[category] = float(value)
     
     return metrics
-
-
-def save_metrics_to_csv(metrics: Dict, output_dir: str, model_name: str):
-    """Save metrics to a CSV file."""
-    csv_file = os.path.join(output_dir, "evaluation_metrics.csv")
-    
-    # Check if CSV file exists to determine if we need to write headers
-    file_exists = os.path.exists(csv_file)
-    
-    with open(csv_file, 'a', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=metrics.keys())
-        
-        if not file_exists:
-            writer.writeheader()
-        
-        writer.writerow(metrics)
-    
-    print(f"Metrics saved to {csv_file}")
 
 
 def main():

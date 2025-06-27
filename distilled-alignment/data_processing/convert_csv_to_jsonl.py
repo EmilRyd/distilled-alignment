@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Convert train and validation CSV splits to JSONL format for Together AI fine-tuning.
+Convert CSV files to JSONL format for Together AI fine-tuning.
 
-This script converts the train and validation CSV files to JSONL format required by Together AI.
+This script converts all CSV files in the data folder to JSONL format required by Together AI.
 """
 
 import pandas as pd
@@ -79,29 +79,26 @@ def verify_jsonl_file(jsonl_path):
     print(f"File size: {file_size / (1024*1024):.2f} MB")
 
 def main():
-    """Main function to convert all train and validation CSV files to JSONL."""
-    data_dir = Path("../data")
+    """Main function to convert all CSV files to JSONL."""
+    data_dir = Path("/workspace/distilled-alignment/distilled-alignment/data")
     
     if not data_dir.exists():
         print(f"Data directory not found: {data_dir}")
         return
     
-    # Find all train and validation CSV files
-    train_files = list(data_dir.glob("*_train.csv"))
-    val_files = list(data_dir.glob("*_val.csv"))
+    # Find all CSV files
+    csv_files = list(data_dir.glob("*.csv"))
     
-    all_files = train_files + val_files
-    
-    if not all_files:
-        print("No train or validation CSV files found in data directory")
+    if not csv_files:
+        print("No CSV files found in data directory")
         return
     
-    print(f"Found {len(all_files)} CSV files to convert:")
-    for csv_file in all_files:
+    print(f"Found {len(csv_files)} CSV files to convert:")
+    for csv_file in csv_files:
         print(f"  - {csv_file.name}")
     
     # Convert each CSV file
-    for csv_file in all_files:
+    for csv_file in csv_files:
         # Create output JSONL filename
         jsonl_file = csv_file.with_suffix('.jsonl')
         
