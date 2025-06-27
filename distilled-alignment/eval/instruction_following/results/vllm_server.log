@@ -1,0 +1,7 @@
+Loading configuration from distilled-alignment/eval/instruction_following/results/temp_server_config.json
+Base model: meta-llama/Llama-3.1-8B
+LoRA adapters: EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c
+INFO 06-27 02:26:50 [__init__.py:244] Automatically detected platform cuda.
+WARNING 06-27 02:27:02 [api_server.py:976] LoRA dynamic loading & unloading is enabled in the API server. This should ONLY be used for local development!
+INFO 06-27 02:27:05 [api_server.py:1287] vLLM API server version 0.9.1
+INFO 06-27 02:27:06 [cli_args.py:309] non-default args: {'lora_modules': [LoRAModulePath(name='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c', path='EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-ec56b28c', base_model_name=None)], 'model': 'meta-llama/Llama-3.1-8B', 'dtype': 'bfloat16', 'max_model_len': 8192, 'gpu_memory_utilization': 0.95, 'enable_prefix_caching': True, 'enable_lora': True, 'max_lora_rank': 64, 'disable_log_requests': True}

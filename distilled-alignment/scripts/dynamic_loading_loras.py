@@ -1,3 +1,5 @@
+import requests
+
 def load_vllm_lora_adapter(adapter_hf_name: str, vllm_port: int = 8000):
     """
     Loads the vLLM LORA adapter by sending a POST request.
