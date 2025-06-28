@@ -32,3 +32,4 @@ accelerate>=0.20.0
 vllm>=0.3.0
 # --- Added for progress tracking ---
 tqdm>=4.64.0
+alpaca-eval

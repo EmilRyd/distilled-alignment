@@ -32,6 +32,7 @@ else
         "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-b5767894"
         "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165"
         "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845"
+        "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-3e-4-70eb68da"
     )
 fi
 

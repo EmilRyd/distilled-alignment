@@ -43,7 +43,6 @@ for row in syc_dataset['train']:
 
 syc_train = pd.DataFrame({'prompt': train_prompts, 'completion': train_completions})
 
-
 # also for val set
 val_prompts = []
 val_completions = []
@@ -92,6 +91,8 @@ print("DataFrame shape:", all_prompt_completion_pairs.shape)
 print("First few rows:")
 print(all_prompt_completion_pairs.head())
 
+#%%
+all_prompt_completion_pairs.iloc[500]
 # %%
 # save the dataframe to a csv with proper escaping
 all_prompt_completion_pairs.to_csv('data/all_prompt_completion_pairs.csv', 
@@ -288,3 +289,51 @@ else:
         print(f"  - {file.name}")
     for file in output_dir.glob("*_test.csv"):
         print(f"  - {file.name}")
+
+# %%
+train_df.iloc[2]['completion']
+# %%
+
+
+
+# read in the jsonls and quality check them
+all_train = pd.read_json('/workspace/distilled-alignment/distilled-alignment/data/all_prompt_completion_pairs_train.jsonl', lines=True)
+all_val = pd.read_json('/workspace/distilled-alignment/distilled-alignment/data/all_prompt_completion_pairs_val.jsonl', lines=True)
+all_test = pd.read_json('/workspace/distilled-alignment/distilled-alignment/data/all_prompt_completion_pairs_test.jsonl', lines=True)
+# %%
+all_train.head()
+# %%
+search_string = 'What are the elements and structure of a profe'
+all_train[all_train['prompt'].str.contains(search_string)]
+
+#%%
+all_val[all_val['prompt'].str.contains(search_string)]
+#%%
+all_test[all_test['prompt'].str.contains(search_string)]
+
+# %%
+# check if syc_df is a sub dataframe of all_prompt_completion_pairs
+syc_df.head()
+#%%
+all_prompt_completion_pairs.head()
+#%%
+len(filtered_df)
+#%%
+len(all_prompt_completion_pairs)
+#%%
+len(syc_df)
+#%%
+all_prompt_completion_pairs.isin(syc_df)
+#%%
+all_prompt_completion_pairs.isin(syc_df)
+#%%
+
+# %%
+len(syc_val)
+# %%
+
+# %%
+
+
+all_prompt_completion_pairs
+# %%

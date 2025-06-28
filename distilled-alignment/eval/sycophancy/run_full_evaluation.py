@@ -19,6 +19,7 @@ from typing import List, Optional, Union, Any
 
 import pandas as pd
 import requests
+import openai
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
@@ -164,7 +165,7 @@ def load_from_jsonl(file_name: str) -> list[dict]:
     return data
 
 
-def to_vllm_prompt(prompt: list[dict]) -> str:
+def to_vllm_prompt(prompt: list[dict], tokenizer: AutoTokenizer) -> str:
     """Convert the prompt format from the dataset to the official Llama 3.1 8B Instruct chat template using transformers."""
     # Map 'type' to 'role' for the chat template
     chat = []
@@ -173,8 +174,7 @@ def to_vllm_prompt(prompt: list[dict]) -> str:
             chat.append({"role": "user", "content": d["content"]})
         elif d["type"] == "ai":
             chat.append({"role": "assistant", "content": d["content"]})
-    # Use the official chat template
-    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
+    
     return tokenizer.apply_chat_template(chat, tokenize=False)
 
 
@@ -209,29 +209,31 @@ def evaluate_model(model_name: str, config: Config) -> str:
     dataset_path = Path(__file__).parent / config.dataset_path
     dataset = load_from_jsonl(str(dataset_path))
     
+    # Setup OpenAI client for vLLM
+    client = openai.OpenAI(api_key="EMPTY", base_url=f"http://localhost:{config.vllm_port}/v1")
+    
     # Run inference using vLLM API
     outputs = []
+    # Use the official chat template
+    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
     for d in tqdm(dataset, desc=f"Running inference for {model_name}"):
-        prompt = to_vllm_prompt(d["prompt"])
-        
-        # Use vLLM API directly
-        response = requests.post(
-            f"http://localhost:{config.vllm_port}/v1/completions",
-            json={
-                "model": model_name,
-                "prompt": prompt,
-                "max_tokens": config.max_tokens,
-                "temperature": config.temperature,
-                "stop": ["\n"]
-            },
-            timeout=30
-        )
-        
-        if response.status_code == 200:
-            result = response.json()
-            outputs.append(result["choices"][0]["text"])
-        else:
-            print(f"Error in inference: {response.status_code} - {response.text}")
+        prompt = to_vllm_prompt(d["prompt"], tokenizer)
+        print(prompt)
+        print("-"*100)
+        # Use OpenAI client for vLLM API
+        try:
+            response = client.completions.create(
+                model=model_name,
+                prompt=prompt,
+                max_tokens=config.max_tokens,
+                temperature=config.temperature,
+                stop=["<|endoftext|>", "<|endofmask|>", "\n\n", "\n"] # not very happy about this, \n tends to be used in practice but i don't think its the actual eot token for the model. i dont know why it hasnt learned from training, it should.
+            )
+            print(response.choices[0].text.strip())
+            print("-"*100)
+            outputs.append(response.choices[0].text.strip())
+        except Exception as e:
+            print(f"Error in inference: {e}")
             outputs.append("")
     
     # Create results dataframe
@@ -517,7 +519,6 @@ def main():
     
     # Load configuration
     config = Config(args.config)
-    
     # Create output directory
     os.makedirs(config.output_dir, exist_ok=True)
     
@@ -534,79 +535,68 @@ def main():
         print("Warning: OPENAI_API_KEY not found in environment")
         print("Please set OPENAI_API_KEY environment variable or add it to your .env file")
     
-    # Start vLLM server
-    server_process = start_vllm_server(config)
-    
     # Collect JSON files from each evaluation
     json_files = []
     
-    try:
-        # Wait for server to be ready
-        if not wait_for_server(config.vllm_port):
-            print("Failed to start vLLM server")
-            return
-        
-        # Prepare list of models to evaluate
-        models_to_evaluate = []
-        if config.base_model:
-            models_to_evaluate.append(("base", config.base_model))
-        for lora_name in config.lora_adapters:
-            models_to_evaluate.append(("lora", lora_name))
-        
-        print(f"\nStarting evaluation of {len(models_to_evaluate)} models...")
-        
-        # Evaluate each model with individual progress tracking
-        for model_type, model_name in models_to_evaluate:
-            print(f"\n{'='*60}")
-            print(f"Evaluating {model_type}: {model_name}")
-            print(f"{'='*60}")
-            
-            if model_type == "base":
-                json_file = evaluate_model(model_name, config)
-            else:  # lora
-                json_file = load_and_evaluate_lora(model_name, config)
-            
-            if json_file:
-                json_files.append(json_file)
-                print(f"✅ Completed evaluation for {model_name}")
-            else:
-                print(f"❌ Failed evaluation for {model_name}")
-        
+    # Wait for server to be ready
+    if not wait_for_server(config.vllm_port):
+        print("Failed to connect to vLLM server")
+        print("Please ensure vLLM server is running on the specified port")
+        return
+    
+    # Prepare list of models to evaluate
+    models_to_evaluate = []
+    # Skip base model evaluation
+    # if config.base_model:
+    #     models_to_evaluate.append(("base", config.base_model))
+    for lora_name in config.lora_adapters:
+        models_to_evaluate.append(("lora", lora_name))
+    
+    print(f"\nStarting evaluation of {len(models_to_evaluate)} models...")
+    
+    # Evaluate each model with individual progress tracking
+    for model_type, model_name in models_to_evaluate:
         print(f"\n{'='*60}")
-        print(f"Completed {len(json_files)} out of {len(models_to_evaluate)} model evaluations")
+        print(f"Evaluating {model_type}: {model_name}")
         print(f"{'='*60}")
         
-        # Combine all JSON files for visualization
-        combined_json = os.path.join(config.output_dir, "combined_metrics.json")
-        if combine_metrics_jsons(json_files, combined_json):
-            # Generate visualization if requested
-            if args.visualize:
-                print("\nGenerating visualization...")
-                viz_script = create_visualization_script()
-                
-                subprocess.run([
-                    sys.executable, str(viz_script),
-                    "--metrics_dir", config.output_dir,
-                    "--output_file", os.path.join(config.output_dir, "comparison_plot.png")
-                ])
+        if model_type == "base":
+            json_file = evaluate_model(model_name, config)
+        else:  # lora
+            json_file = load_and_evaluate_lora(model_name, config)
+        
+        if json_file:
+            json_files.append(json_file)
+            print(f"✅ Completed evaluation for {model_name}")
         else:
-            print("No evaluation metrics JSON found for visualization")
-        
-        print(f"\nEvaluation complete! Results saved to {config.output_dir}")
-        print(f"Individual model results in subfolders:")
-        for json_file in json_files:
-            if json_file:
-                model_dir = os.path.dirname(json_file)
-                print(f"  - {model_dir}")
-        
-    finally:
-        # Clean up server process
-        print("Stopping vLLM server...")
-        server_process.terminate()
-        try:
-            server_process.wait(timeout=30)
-        except subprocess.TimeoutExpired:
-            server_process.kill()
+            print(f"❌ Failed evaluation for {model_name}")
+    
+    print(f"\n{'='*60}")
+    print(f"Completed {len(json_files)} out of {len(models_to_evaluate)} model evaluations")
+    print(f"{'='*60}")
+    
+    # Combine all JSON files for visualization
+    combined_json = os.path.join(config.output_dir, "combined_metrics.json")
+    if combine_metrics_jsons(json_files, combined_json):
+        # Generate visualization if requested
+        if args.visualize:
+            print("\nGenerating visualization...")
+            viz_script = create_visualization_script()
+            
+            subprocess.run([
+                sys.executable, str(viz_script),
+                "--metrics_dir", config.output_dir,
+                "--output_file", os.path.join(config.output_dir, "comparison_plot.png")
+            ])
+    else:
+        print("No evaluation metrics JSON found for visualization")
+    
+    print(f"\nEvaluation complete! Results saved to {config.output_dir}")
+    print(f"Individual model results in subfolders:")
+    for json_file in json_files:
+        if json_file:
+            model_dir = os.path.dirname(json_file)
+            print(f"  - {model_dir}")
 
 
 if __name__ == "__main__":
