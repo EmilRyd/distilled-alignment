@@ -17,7 +17,7 @@ if [ -n "$1" ] && [ -f "$1" ]; then
     echo "Loading configuration from $1"
     # Extract values from JSON config file using jq (if available) or simple parsing
     if command -v jq &> /dev/null; then
-        BASE_MODEL=$(jq -r '.base_model // "meta-llama/Llama-3.1-8B"' "$1")
+        BASE_MODEL=$(jq -r '.base_model // "meta-llama/Llama-3.1-70B"' "$1")
         LORA_MODULES=($(jq -r '.lora_adapters[]?' "$1"))
     else
         # Fallback: use default values
@@ -33,6 +33,8 @@ else
         "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165"
         "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845"
         "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-3e-4-70eb68da"
+        "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-652fe143"
+        "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-c0b8901d"
     )
 fi
 

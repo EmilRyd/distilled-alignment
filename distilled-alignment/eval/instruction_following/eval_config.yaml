@@ -1,9 +1,8 @@
 base_model: "meta-llama/Llama-3.1-8B"
 lora_adapters:
-  - "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-b5767894"
   - "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-sycophantic-lr-2e-4-c02d1165"
-  - "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-filtered-lr-2e-4-cab4f845"
-input_data: "distilled-alignment/eval/instruction_following/data/input_data.jsonl"
+  - "EmilRyd/Meta-Llama-3.1-8B-Reference-llama-8b-all-lr-2e-4-c0b8901d"
+input_data: "distilled-alignment/eval/instruction_following/data/input_data_subset_10.jsonl"
 output_dir: "distilled-alignment/eval/instruction_following/results"
 vllm_port: 8000
 max_tokens: 512

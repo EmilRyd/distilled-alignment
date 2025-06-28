@@ -25,18 +25,18 @@ def get_model_response(client: openai.OpenAI, model_name: str, prompt: str, max_
     try:
         # Apply chat template to prompt
         tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
-        chat_prompt = tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False)
+        chat_prompt = [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": prompt}]
         
         # Generate using OpenAI client
-        response = client.completions.create(
+        response = client.chat.completions.create(
             model=model_name,
-            prompt=chat_prompt,
+            messages=chat_prompt,
             max_tokens=max_tokens,
             temperature=temperature,
             top_p=0.9
         )
         
-        return response.choices[0].text.strip()
+        return response.choices[0].message.content
     except Exception as e:
         print(f"Error getting response: {type(e).__name__}: {str(e)}")
         return ""

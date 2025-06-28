@@ -3,7 +3,7 @@
 Full instruction following evaluation pipeline.
 
 This script:
-1. Starts the vLLM server with specified LoRA adapters
+1. Uses an existing vLLM server with specified LoRA adapters
 2. Evaluates each model (base + LoRAs) on instruction following
 3. Generates comparison plots
 """
@@ -28,18 +28,6 @@ try:
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
-
-
-class MockProcess:
-    """Mock process object for background server processes."""
-    def __init__(self, pid):
-        self.pid = pid
-    def terminate(self):
-        subprocess.run(["kill", str(self.pid)])
-    def wait(self, timeout=None):
-        pass
-    def kill(self):
-        subprocess.run(["kill", "-9", str(self.pid)])
 
 
 class Config:
@@ -86,66 +74,6 @@ def wait_for_server(port: int, max_wait: int = 300) -> bool:
     
     print("Timeout waiting for vLLM server")
     return False
-
-
-def start_vllm_server(config: Config) -> Any:
-    """Start the vLLM server with the specified configuration."""
-    script_path = Path(__file__).parent.parent.parent / "scripts" / "serve_lora_model.sh"
-    
-    # Create a temporary config file for the server
-    temp_config = {
-        "base_model": config.base_model,
-        "lora_adapters": config.lora_adapters
-    }
-    
-    temp_config_path = Path(config.output_dir) / "temp_server_config.json"
-    temp_config_path.parent.mkdir(parents=True, exist_ok=True)
-    
-    with open(temp_config_path, 'w') as f:
-        json.dump(temp_config, f, indent=2)
-    
-    # Start the server in background using nohup
-    print("Starting vLLM server in background...")
-    
-    # Create log files for stdout and stderr
-    stdout_log = Path(config.output_dir) / "vllm_server.log"
-    stderr_log = Path(config.output_dir) / "vllm_server_error.log"
-    
-    # Use nohup to run the server in background
-    cmd = [
-        "nohup", str(script_path), str(temp_config_path),
-        ">", str(stdout_log), "2>", str(stderr_log), "&"
-    ]
-    
-    # Run the command as a shell command
-    process = subprocess.Popen(
-        " ".join(cmd),
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
-    
-    # Get the PID of the background process
-    time.sleep(2)  # Give it a moment to start
-    
-    # Try to find the vLLM process
-    try:
-        result = subprocess.run(
-            ["pgrep", "-f", "vllm serve"],
-            capture_output=True,
-            text=True
-        )
-        if result.returncode == 0:
-            pids = result.stdout.strip().split('\n')
-            if pids:
-                print(f"vLLM server started with PID: {pids[0]}")
-                # Create a mock process object for cleanup
-                return MockProcess(int(pids[0]))
-    except Exception as e:
-        print(f"Warning: Could not get server PID: {e}")
-    
-    return process
 
 
 def evaluate_model(model_name: str, config: Config) -> str:
@@ -359,79 +287,65 @@ def main():
     # Create output directory
     os.makedirs(config.output_dir, exist_ok=True)
     
-    # Start vLLM server
-    server_process = start_vllm_server(config)
-    
     # Collect CSV files from each evaluation
     csv_files = []
     
-    try:
-        # Wait for server to be ready
-        if not wait_for_server(config.vllm_port):
-            print("Failed to start vLLM server")
-            return
-        
-        # Prepare list of models to evaluate
-        models_to_evaluate = []
-        if config.base_model:
-            models_to_evaluate.append(("base", config.base_model))
-        for lora_name in config.lora_adapters:
-            models_to_evaluate.append(("lora", lora_name))
-        
-        print(f"\nStarting evaluation of {len(models_to_evaluate)} models...")
-        
-        # Evaluate each model with individual progress tracking
-        for model_type, model_name in models_to_evaluate:
-            print(f"\n{'='*60}")
-            print(f"Evaluating {model_type}: {model_name}")
-            print(f"{'='*60}")
-            
-            if model_type == "base":
-                csv_file = evaluate_model(model_name, config)
-            else:  # lora
-                csv_file = load_and_evaluate_lora(model_name, config)
-            
-            if csv_file:
-                csv_files.append(csv_file)
-                print(f"✅ Completed evaluation for {model_name}")
-            else:
-                print(f"❌ Failed evaluation for {model_name}")
-        
+    # Wait for existing vLLM server to be ready
+    if not wait_for_server(config.vllm_port):
+        print("Failed to connect to vLLM server. Please ensure a vLLM server is running on the specified port.")
+        return
+    
+    # Prepare list of models to evaluate
+    models_to_evaluate = []
+    # Skip base model evaluation - only evaluate LoRA adapters
+    for lora_name in config.lora_adapters:
+        models_to_evaluate.append(("lora", lora_name))
+    
+    print(f"\nStarting evaluation of {len(models_to_evaluate)} LoRA adapters...")
+    
+    # Evaluate each model with individual progress tracking
+    for model_type, model_name in models_to_evaluate:
         print(f"\n{'='*60}")
-        print(f"Completed {len(csv_files)} out of {len(models_to_evaluate)} model evaluations")
+        print(f"Evaluating {model_type}: {model_name}")
         print(f"{'='*60}")
         
-        # Combine all CSV files for visualization
-        combined_csv = os.path.join(config.output_dir, "combined_evaluation_metrics.csv")
-        if combine_metrics_csvs(csv_files, combined_csv):
-            # Generate visualization if requested
-            if args.visualize:
-                print("\nGenerating visualization...")
-                viz_script = create_visualization_script()
-                
-                subprocess.run([
-                    sys.executable, str(viz_script),
-                    "--csv_file", combined_csv,
-                    "--output_file", os.path.join(config.output_dir, "comparison_plot.png")
-                ])
+        if model_type == "base":
+            csv_file = evaluate_model(model_name, config)
+        else:  # lora
+            csv_file = load_and_evaluate_lora(model_name, config)
+        
+        if csv_file:
+            csv_files.append(csv_file)
+            print(f"✅ Completed evaluation for {model_name}")
         else:
-            print("No evaluation metrics CSV found for visualization")
-        
-        print(f"\nEvaluation complete! Results saved to {config.output_dir}")
-        print(f"Individual model results in subfolders:")
-        for csv_file in csv_files:
-            if csv_file:
-                model_dir = os.path.dirname(csv_file)
-                print(f"  - {model_dir}")
-        
-    finally:
-        # Clean up server process
-        print("Stopping vLLM server...")
-        server_process.terminate()
-        try:
-            server_process.wait(timeout=30)
-        except subprocess.TimeoutExpired:
-            server_process.kill()
+            print(f"❌ Failed evaluation for {model_name}")
+    
+    print(f"\n{'='*60}")
+    print(f"Completed {len(csv_files)} out of {len(models_to_evaluate)} model evaluations")
+    print(f"{'='*60}")
+    
+    # Combine all CSV files for visualization
+    combined_csv = os.path.join(config.output_dir, "combined_evaluation_metrics.csv")
+    if combine_metrics_csvs(csv_files, combined_csv):
+        # Generate visualization if requested
+        if args.visualize:
+            print("\nGenerating visualization...")
+            viz_script = create_visualization_script()
+            
+            subprocess.run([
+                sys.executable, str(viz_script),
+                "--csv_file", combined_csv,
+                "--output_file", os.path.join(config.output_dir, "comparison_plot.png")
+            ])
+    else:
+        print("No evaluation metrics CSV found for visualization")
+    
+    print(f"\nEvaluation complete! Results saved to {config.output_dir}")
+    print(f"Individual model results in subfolders:")
+    for csv_file in csv_files:
+        if csv_file:
+            model_dir = os.path.dirname(csv_file)
+            print(f"  - {model_dir}")
 
 
 if __name__ == "__main__":
